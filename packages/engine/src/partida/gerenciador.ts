@@ -1,195 +1,118 @@
-import type {
-  Atributo,
-  Carta,
-  EstadoPartida,
-  Jogador,
-  ResultadoRodada,
-} from '../types.js';
-import {
-  BARALHO_COMPLETO,
-  embaralhar,
-  filtrarCartasJogaveis,
-} from '../cartas/baralho.js';
+import type { EstadoPartida, Jogador, Carta, Atributo } from '../types.js';
+import { embaralhar, filtrarCartasJogaveis } from '../cartas/baralho.js';
 import { compararRodada } from '../regras/comparador.js';
 
-export interface OpcoesPartida {
-  nomeJogador?: string;
-  nomeIA?: string;
-  /** Baralho customizado (para testes). Padrão: baralho completo. */
-  baralho?: Carta[];
-}
+export function criarPartida(
+  nomesJogadores: string[],
+  cartasDisponiveis: Carta[]
+): EstadoPartida {
+  const cartasJogaveis = filtrarCartasJogaveis(cartasDisponiveis);
+  const embaralhadas = embaralhar(cartasJogaveis);
 
-/**
- * Cria uma nova partida 1x1 (jogador humano vs IA).
- * As cartas jogáveis são embaralhadas e distribuídas igualmente.
- */
-export function criarPartida(opcoes: OpcoesPartida = {}): EstadoPartida {
-  const {
-    nomeJogador = 'Você',
-    nomeIA = 'Computador',
-    baralho = BARALHO_COMPLETO,
-  } = opcoes;
+  const cartasPorJogador = Math.floor(embaralhadas.length / nomesJogadores.length);
 
-  const jogaveis = embaralhar(filtrarCartasJogaveis(baralho));
-
-  const jogadorCartas: Carta[] = [];
-  const iaCartas: Carta[] = [];
-
-  jogaveis.forEach((carta, i) => {
-    if (i % 2 === 0) jogadorCartas.push(carta);
-    else iaCartas.push(carta);
-  });
-
-  const jogador: Jogador = {
-    id: 'jogador',
-    nome: nomeJogador,
-    isIA: false,
-    cartas: jogadorCartas,
-  };
-
-  const ia: Jogador = {
-    id: 'ia',
-    nome: nomeIA,
-    isIA: true,
-    cartas: iaCartas,
-  };
-
-  return {
-    jogadores: [jogador, ia],
-    jogadorAtivoId: jogador.id,
-    monte: [],
-    fase: 'em_jogo',
-    historico: [],
-    rodada: 1,
-    vencedorPartidaId: null,
-  };
-}
-
-/** Retorna o jogador pelo id, ou undefined. */
-export function obterJogador(
-  estado: EstadoPartida,
-  id: string
-): Jogador | undefined {
-  return estado.jogadores.find((j) => j.id === id);
-}
-
-/** Retorna a carta do topo da mão de um jogador (índice 0), ou null. */
-export function obterCartaTopo(
-  estado: EstadoPartida,
-  jogadorId: string
-): Carta | null {
-  const jogador = obterJogador(estado, jogadorId);
-  if (!jogador || jogador.cartas.length === 0) return null;
-  return jogador.cartas[0];
-}
-
-/**
- * Indica se o jogador informado pode escolher o atributo agora:
- * a partida precisa estar em jogo e ser a vez dele.
- */
-export function podeEscolherAtributo(
-  estado: EstadoPartida,
-  jogadorId: string
-): boolean {
-  return estado.fase === 'em_jogo' && estado.jogadorAtivoId === jogadorId;
-}
-
-/** Ordena as cartas ganhas de forma determinística para enfileirar na mão. */
-function ordenarGanho(cartas: Carta[]): Carta[] {
-  // Mantém a ordem em que entraram; embaralhar levemente evita loops infinitos
-  // de empate previsível, mas preservamos determinismo simples aqui.
-  return cartas;
-}
-
-/**
- * Executa uma rodada completa a partir do atributo escolhido pelo jogador ativo.
- * Atualiza mãos, monte, histórico, vez e verifica fim de jogo.
- *
- * @returns Novo estado da partida e o resultado da rodada.
- */
-export function escolherAtributo(
-  estado: EstadoPartida,
-  jogadorId: string,
-  atributo: Atributo
-): { estado: EstadoPartida; resultado: ResultadoRodada } {
-  if (!podeEscolherAtributo(estado, jogadorId)) {
-    throw new Error(
-      'Não é possível escolher atributo: não é a vez deste jogador ou a partida não está em jogo.'
-    );
-  }
-
-  // Clona jogadores e suas mãos para não mutar o estado anterior.
-  const jogadores: Jogador[] = estado.jogadores.map((j) => ({
-    ...j,
-    cartas: [...j.cartas],
+  const jogadores: Jogador[] = nomesJogadores.map((nome, i) => ({
+    id: `j${i}`,
+    nome,
+    cartas: embaralhadas.slice(
+      i * cartasPorJogador, 
+      (i + 1) * cartasPorJogador
+    )
   }));
 
-  const cartasTopo: Record<string, Carta> = {};
-  for (const j of jogadores) {
-    const topo = j.cartas[0];
-    if (!topo) {
-      throw new Error(`Jogador ${j.nome} não possui cartas para jogar.`);
-    }
-    cartasTopo[j.id] = topo;
-  }
+  return {
+    jogadores,
+    monteEmpate: [],
+    turnoAtual: 0,
+    rodada: 1,
+    vencedor: null,
+    historico: [`Partida iniciada! ${nomesJogadores.length} jogadores.`],
+    finalizada: false
+  };
+}
 
-  const resultado = compararRodada(jogadores, cartasTopo, atributo);
+export function escolherAtributo(
+  estado: EstadoPartida,
+  atributo: Atributo
+): EstadoPartida {
+  if (estado.finalizada) return estado;
 
-  // Remove a carta de topo de cada jogador.
-  const emJogo: Carta[] = [];
-  for (const j of jogadores) {
-    const [carta, ...resto] = j.cartas;
-    j.cartas = resto;
-    emJogo.push(carta);
-  }
+  const jogadoresAtivos = estado.jogadores.filter(j => j.cartas.length > 0);
+  const resultado = compararRodada(jogadoresAtivos, atributo, estado.monteEmpate);
 
-  // Cartas em disputa = cartas jogadas + monte acumulado.
-  const monteAtual = [...estado.monte];
-  const cartasEmDisputa = [...emJogo, ...monteAtual];
+  const novoHistorico = [...estado.historico, 
+    `Rodada ${estado.rodada}: ${resultado.mensagem}`
+  ];
 
   let novoMonte: Carta[] = [];
-  let proximoAtivoId = estado.jogadorAtivoId;
+  let novosJogadores: Jogador[] = [...estado.jogadores];
 
-  if (resultado.empate || resultado.vencedorId === null) {
-    // Empate: cartas vão para o monte; a vez se mantém com o jogador ativo.
-    novoMonte = cartasEmDisputa;
+  if (resultado.monte) {
+    const cartasDaRodada = jogadoresAtivos.map(j => j.cartas[0]);
+    novoMonte = [...estado.monteEmpate, ...cartasDaRodada];
+
+    novosJogadores = novosJogadores.map(j => ({
+      ...j,
+      cartas: j.cartas.length > 0 ? j.cartas.slice(1) : j.cartas
+    }));
   } else {
-    // Vencedor leva todas as cartas em disputa para o fim da sua mão.
-    const venc = jogadores.find((j) => j.id === resultado.vencedorId)!;
-    venc.cartas = [...venc.cartas, ...ordenarGanho(cartasEmDisputa)];
-    proximoAtivoId = venc.id; // vencedor escolhe o próximo atributo.
+    const vencedorIdx = novosJogadores.findIndex(j => j.id === resultado.vencedor);
+    const cartasDaRodada = jogadoresAtivos.map(j => j.cartas[0]);
+
+    novosJogadores = novosJogadores.map(j => ({
+      ...j,
+      cartas: j.cartas.length > 0 ? j.cartas.slice(1) : j.cartas
+    }));
+
+    novosJogadores[vencedorIdx] = {
+      ...novosJogadores[vencedorIdx],
+      cartas: [
+        ...novosJogadores[vencedorIdx].cartas,
+        ...cartasDaRodada,
+        ...estado.monteEmpate
+      ]
+    };
+
+    novoMonte = [];
   }
 
-  const historico = [...estado.historico, resultado];
+  const jogadoresComCartas = novosJogadores.filter(j => j.cartas.length > 0);
+  let vencedorFinal: string | null = null;
+  let finalizada = false;
 
-  // Verifica fim de jogo: alguém ficou sem cartas.
-  let fase = estado.fase;
-  let vencedorPartidaId = estado.vencedorPartidaId;
+  if (jogadoresComCartas.length === 1) {
+    vencedorFinal = jogadoresComCartas[0].id;
+    finalizada = true;
+    novoHistorico.push(`🏆 ${jogadoresComCartas[0].nome} venceu a partida!`);
+  }
 
-  const semCartas = jogadores.filter((j) => j.cartas.length === 0);
-  const comCartas = jogadores.filter((j) => j.cartas.length > 0);
-
-  if (novoMonte.length === 0 && comCartas.length === 1 && semCartas.length > 0) {
-    fase = 'finalizada';
-    vencedorPartidaId = comCartas[0].id;
-  } else if (comCartas.length === 1 && semCartas.length > 0) {
-    // Um jogador zerou, mas há monte pendente: o que tem cartas continua.
-    // A partida só termina quando o monte é resolvido. Mantemos em jogo,
-    // garantindo que o jogador ativo ainda tenha cartas.
-    if (!comCartas.some((j) => j.id === proximoAtivoId)) {
-      proximoAtivoId = comCartas[0].id;
+  let proximoTurno = estado.turnoAtual;
+  if (resultado.vencedor) {
+    proximoTurno = novosJogadores.findIndex(j => j.id === resultado.vencedor);
+  } else {
+    proximoTurno = (estado.turnoAtual + 1) % novosJogadores.length;
+    while (novosJogadores[proximoTurno].cartas.length === 0) {
+      proximoTurno = (proximoTurno + 1) % novosJogadores.length;
     }
   }
 
-  const novoEstado: EstadoPartida = {
-    jogadores,
-    jogadorAtivoId: proximoAtivoId,
-    monte: novoMonte,
-    fase,
-    historico,
+  return {
+    jogadores: novosJogadores,
+    monteEmpate: novoMonte,
+    turnoAtual: proximoTurno,
     rodada: estado.rodada + 1,
-    vencedorPartidaId,
+    vencedor: vencedorFinal,
+    historico: novoHistorico,
+    finalizada
   };
+}
 
-  return { estado: novoEstado, resultado };
+export function obterCartaTopo(jogador: Jogador): Carta | null {
+  return jogador.cartas.length > 0 ? jogador.cartas[0] : null;
+}
+
+export function podeEscolherAtributo(estado: EstadoPartida, jogadorId: string): boolean {
+  if (estado.finalizada) return false;
+  const jogadorAtual = estado.jogadores[estado.turnoAtual];
+  return jogadorAtual.id === jogadorId && jogadorAtual.cartas.length > 0;
 }
