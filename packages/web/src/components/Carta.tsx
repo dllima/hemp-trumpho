@@ -1,156 +1,109 @@
-import { motion } from 'framer-motion';
-import {
-  ATRIBUTOS,
-  ATRIBUTO_LABEL,
-  type Atributo,
-  type Carta as CartaTipo,
-} from '@hemp-trunfo/engine';
+import { motion } from 'framer-motion'
+import type { Carta as CartaType, CartaGenetica, Atributo } from '@hemp-trunfo/engine'
 
-interface CartaProps {
-  carta: CartaTipo | null;
-  /** Mostra a frente da carta? Se false, exibe o verso. */
-  revelada: boolean;
-  /** Atributos clicáveis (turno do dono da carta). */
-  interativa?: boolean;
-  /** Atributo escolhido na rodada (destaca). */
-  atributoDestaque?: Atributo | null;
-  onEscolherAtributo?: (atributo: Atributo) => void;
+const iconesAtributos: Record<Atributo, string> = {
+  thc: '🍃',
+  cbd: '🍃',
+  relaxamento: '🧘',
+  foco: '👁️',
+  felicidade: '😊',
+  fome: '🍴',
+  sono: '😴'
 }
 
-const corEspecial: Record<string, string> = {
-  vantagem: 'from-emerald-500 to-green-700 border-emerald-300',
-  reves: 'from-rose-600 to-red-800 border-rose-400',
-  informativa: 'from-sky-600 to-blue-800 border-sky-400',
-  regras: 'from-amber-500 to-orange-700 border-amber-300',
-};
+const nomesAtributos: Record<Atributo, string> = {
+  thc: 'NÍVEL DE THC',
+  cbd: 'NÍVEL DE CBD',
+  relaxamento: 'RELAXAMENTO',
+  foco: 'FOCO',
+  felicidade: 'FELICIDADE',
+  fome: 'FOME',
+  sono: 'SONO'
+}
 
-export default function Carta({
-  carta,
-  revelada,
-  interativa = false,
-  atributoDestaque = null,
-  onEscolherAtributo,
-}: CartaProps) {
+interface CartaProps {
+  carta: CartaType
+  virada: boolean
+  onEscolherAtributo?: (atributo: Atributo) => void
+  podeEscolher?: boolean
+}
+
+export function CartaVisual({ carta, virada, onEscolherAtributo, podeEscolher }: CartaProps) {
+  if (carta.tipo === 'vantagem') {
+    return (
+      <div className="w-64 h-96 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-xl p-4 shadow-2xl border-2 border-yellow-300">
+        <div className="text-center h-full flex flex-col justify-center">
+          <h2 className="text-3xl font-bold mb-4">⭐ VANTAGEM</h2>
+          <p className="text-lg">Você vence esta rodada automaticamente!</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (carta.tipo === 'reves') {
+    return (
+      <div className="w-64 h-96 bg-gradient-to-br from-red-700 to-red-900 rounded-xl p-4 shadow-2xl border-2 border-red-500">
+        <div className="text-center h-full flex flex-col justify-center">
+          <h2 className="text-3xl font-bold mb-4">💀 REVÉS</h2>
+          <p className="text-lg">Você perde esta rodada automaticamente!</p>
+        </div>
+      </div>
+    )
+  }
+
+  const genetica = carta as CartaGenetica
+  const atributos: Atributo[] = ['thc', 'cbd', 'relaxamento', 'foco', 'felicidade', 'fome', 'sono']
+
   return (
-    <div className="[perspective:1200px]">
-      <motion.div
-        className="relative h-[420px] w-[300px] rounded-2xl [transform-style:preserve-3d]"
-        animate={{ rotateY: revelada ? 0 : 180 }}
-        transition={{ duration: 0.5, ease: 'easeInOut' }}
+    <div className="relative w-72 h-[28rem] perspective-1000">
+      <motion.div 
+        className="w-full h-full relative preserve-3d"
+        initial={false}
+        animate={{ rotateY: virada ? 0 : 180 }}
+        transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
       >
-        {/* Frente */}
-        <div className="absolute inset-0 [backface-visibility:hidden]">
-          {carta ? (
-            <FrenteCarta
-              carta={carta}
-              interativa={interativa}
-              atributoDestaque={atributoDestaque}
-              onEscolherAtributo={onEscolherAtributo}
-            />
-          ) : (
-            <CartaVazia />
-          )}
+        <div className="absolute inset-0 backface-hidden bg-gradient-to-br from-hemp-green to-hemp-dark rounded-xl p-4 shadow-2xl border border-hemp-gold">
+          <div className="flex justify-between items-start mb-2">
+            <span className="text-hemp-gold font-bold text-lg">{genetica.id}</span>
+            <span className="text-xs bg-hemp-purple px-2 py-1 rounded">{genetica.banco}</span>
+          </div>
+
+          <div className="h-24 bg-hemp-dark rounded-lg mb-3 flex items-center justify-center text-4xl">
+            🌿
+          </div>
+
+          <h3 className="text-hemp-gold font-bold text-lg mb-1 leading-tight">{genetica.nome}</h3>
+          <p className="text-xs text-gray-300 mb-3 line-clamp-2">{genetica.descricao}</p>
+
+          <div className="space-y-1">
+            {atributos.map(attr => (
+              <button
+                key={attr}
+                onClick={() => podeEscolher && onEscolherAtributo?.(attr)}
+                disabled={!podeEscolher}
+                className={`w-full flex justify-between items-center px-2 py-1 rounded text-sm transition-colors
+                  ${podeEscolher 
+                    ? 'hover:bg-hemp-light cursor-pointer bg-hemp-dark/50' 
+                    : 'cursor-default bg-hemp-dark/30'
+                  }`}
+              >
+                <span className="text-xs">{iconesAtributos[attr]} {nomesAtributos[attr]}</span>
+                <span className="font-bold text-hemp-gold">
+                  {attr === 'thc' || attr === 'cbd' ? `${genetica[attr]}%` : genetica[attr]}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Verso */}
-        <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <VersoCarta />
+        <div className="absolute inset-0 backface-hidden rounded-xl bg-gradient-to-br from-hemp-purple to-hemp-dark flex items-center justify-center border border-hemp-gold/30"
+             style={{ transform: 'rotateY(180deg)' }}>
+          <div className="text-center">
+            <div className="text-6xl mb-4">🌿</div>
+            <p className="text-hemp-gold font-bold">HEMP TRUNFO</p>
+          </div>
         </div>
       </motion.div>
     </div>
-  );
-}
-
-function FrenteCarta({
-  carta,
-  interativa,
-  atributoDestaque,
-  onEscolherAtributo,
-}: {
-  carta: CartaTipo;
-  interativa: boolean;
-  atributoDestaque: Atributo | null;
-  onEscolherAtributo?: (atributo: Atributo) => void;
-}) {
-  if (carta.tipo !== 'genetica') {
-    const cor = corEspecial[carta.tipo] ?? 'from-hemp-500 to-hemp-800 border-hemp-300';
-    return (
-      <div
-        className={`flex h-full w-full flex-col items-center justify-center gap-4 rounded-2xl border-4 bg-gradient-to-br ${cor} p-6 text-center shadow-2xl`}
-      >
-        <span className="text-6xl">
-          {carta.tipo === 'vantagem' ? '⭐' : carta.tipo === 'reves' ? '💀' : 'ℹ️'}
-        </span>
-        <h3 className="font-display text-3xl uppercase tracking-wide text-white drop-shadow">
-          {carta.nome}
-        </h3>
-        <p className="text-sm leading-relaxed text-white/90">{carta.descricao}</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex h-full w-full flex-col rounded-2xl border-4 border-hemp-300 bg-gradient-to-br from-hemp-100 to-hemp-300 p-3 text-hemp-950 shadow-2xl">
-      <div className="flex items-center justify-between rounded-xl bg-hemp-800 px-3 py-2 text-hemp-50">
-        <div>
-          <h3 className="font-display text-lg leading-tight">{carta.nome}</h3>
-          <p className="text-[11px] uppercase tracking-widest text-hemp-200">
-            {carta.linhagem}
-          </p>
-        </div>
-        <span className="text-3xl">🌿</span>
-      </div>
-
-      <p className="mt-2 px-1 text-[11px] italic text-hemp-700">
-        {carta.descricao}
-      </p>
-
-      <ul className="mt-2 flex flex-1 flex-col gap-1">
-        {ATRIBUTOS.map((attr) => {
-          const valor = carta.atributos[attr];
-          const destaque = atributoDestaque === attr;
-          const base =
-            'flex items-center justify-between rounded-lg px-3 py-1.5 text-sm font-semibold transition';
-          const estado = destaque
-            ? 'bg-hemp-700 text-white ring-2 ring-amber-300'
-            : 'bg-white/70 text-hemp-900';
-          const clicavel = interativa
-            ? 'cursor-pointer hover:bg-hemp-600 hover:text-white'
-            : 'cursor-default';
-          return (
-            <li key={attr}>
-              <button
-                type="button"
-                disabled={!interativa}
-                onClick={() => interativa && onEscolherAtributo?.(attr)}
-                className={`w-full ${base} ${estado} ${clicavel}`}
-              >
-                <span>{ATRIBUTO_LABEL[attr]}</span>
-                <span className="tabular-nums">{valor}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
-}
-
-function VersoCarta() {
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-2xl border-4 border-hemp-400 bg-gradient-to-br from-hemp-700 to-hemp-950 shadow-2xl">
-      <span className="text-7xl">🍃</span>
-      <span className="font-display text-2xl uppercase tracking-widest text-hemp-200">
-        Hemp Trunfo
-      </span>
-    </div>
-  );
-}
-
-function CartaVazia() {
-  return (
-    <div className="flex h-full w-full items-center justify-center rounded-2xl border-4 border-dashed border-hemp-600 bg-hemp-900/40 text-hemp-400">
-      Sem carta
-    </div>
-  );
+  )
 }

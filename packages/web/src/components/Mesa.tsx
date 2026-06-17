@@ -1,299 +1,158 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import {
-  ATRIBUTO_LABEL,
-  type Atributo,
-} from '@hemp-trunfo/engine';
-import { useJogoStore } from '../store/jogoStore';
-import Carta from './Carta';
+import { useEffect } from 'react'
+import { useJogoStore } from '../store/jogoStore'
+import { CartaVisual } from './Carta'
+import { motion, AnimatePresence } from 'framer-motion'
 
-export default function Mesa() {
-  const partida = useJogoStore((s) => s.partida);
-  const ultimoResultado = useJogoStore((s) => s.ultimoResultado);
-  const processando = useJogoStore((s) => s.processando);
-  const iniciarPartida = useJogoStore((s) => s.iniciarPartida);
-  const jogarAtributo = useJogoStore((s) => s.jogarAtributo);
-  const getCartaTopo = useJogoStore((s) => s.getCartaTopo);
-  const podeJogar = useJogoStore((s) => s.podeJogar);
+export function Mesa() {
+  const { partida, iniciarPartida, jogarAtributo } = useJogoStore()
 
-  const jogador = partida?.jogadores.find((j) => j.id === 'jogador');
-  const ia = partida?.jogadores.find((j) => j.id === 'ia');
+  useEffect(() => {
+    if (!partida || partida.finalizada) return
+    if (partida.turnoAtual !== 1) return
 
-  const cartaJogador = getCartaTopo('jogador');
-  const cartaIA = getCartaTopo('ia');
+    const timer = setTimeout(() => {
+      const atributos = ['thc', 'relaxamento', 'foco', 'felicidade', 'fome', 'sono'] as const
+      const atributo = atributos[Math.floor(Math.random() * atributos.length)]
+      jogarAtributo(atributo)
+    }, 1500)
 
-  const vezDoJogador = podeJogar('jogador');
-  const finalizada = partida?.fase === 'finalizada';
-  const vencedor =
-    finalizada && partida
-      ? partida.jogadores.find((j) => j.id === partida.vencedorPartidaId)
-      : null;
+    return () => clearTimeout(timer)
+  }, [partida, jogarAtributo])
 
-  // Revela a carta da IA quando há resultado da rodada ou fim de jogo.
-  const revelarIA = Boolean(ultimoResultado) || finalizada;
+  if (!partida) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-hemp-dark to-black">
+        <div className="text-center">
+          <motion.h1 
+            className="text-5xl font-bold text-hemp-gold mb-2"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            🌿 Hemp Trunfo
+          </motion.h1>
+          <p className="text-gray-400 mb-8">O jogo de cartas das genéticas</p>
+          <motion.button 
+            onClick={() => iniciarPartida(['Você', 'Computador'])}
+            className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold transition-colors shadow-lg"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            ▶ Iniciar Partida
+          </motion.button>
+        </div>
+      </div>
+    )
+  }
 
-  const atributoDestaque = ultimoResultado?.atributo ?? null;
+  if (partida.finalizada) {
+    const vencedor = partida.jogadores.find(j => j.id === partida.vencedor)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-hemp-dark to-black">
+        <motion.div 
+          className="text-center"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 260, damping: 20 }}
+        >
+          <h1 className="text-6xl font-bold text-hemp-gold mb-4">🏆 Fim de Jogo!</h1>
+          <p className="text-3xl mb-2">{vencedor?.nome} venceu!</p>
+          <p className="text-gray-400 mb-8">Rodadas jogadas: {partida.rodada - 1}</p>
+          <button 
+            onClick={() => iniciarPartida(['Você', 'Computador'])}
+            className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold transition-colors"
+          >
+            🔄 Jogar Novamente
+          </button>
+        </motion.div>
+      </div>
+    )
+  }
+
+  const jogadorHumano = partida.jogadores[0]
+  const jogadorIA = partida.jogadores[1]
+  const cartaHumano = jogadorHumano.cartas[0]
+  const cartaIA = jogadorIA.cartas[0]
+  const ehMinhaVez = partida.turnoAtual === 0
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-6">
-      <Header
-        rodada={partida?.rodada ?? 0}
-        emJogo={partida?.fase === 'em_jogo'}
-        cartasJogador={jogador?.cartas.length ?? 0}
-        cartasIA={ia?.cartas.length ?? 0}
-        onIniciar={iniciarPartida}
-        iniciada={Boolean(partida)}
-      />
+    <div className="min-h-screen bg-gradient-to-b from-hemp-dark to-black p-4">
+      <div className="flex justify-between items-center mb-6 max-w-4xl mx-auto">
+        <h1 className="text-2xl font-bold text-hemp-gold">🌿 Hemp Trunfo</h1>
+        <div className="text-sm flex gap-4">
+          <span className="bg-hemp-dark px-3 py-1 rounded-full">Rodada: {partida.rodada}</span>
+          <span className={`px-3 py-1 rounded-full ${ehMinhaVez ? 'bg-hemp-green' : 'bg-hemp-purple'}`}>
+            Turno: {partida.jogadores[partida.turnoAtual].nome}
+          </span>
+        </div>
+      </div>
 
-      {!partida && <TelaInicial onIniciar={iniciarPartida} />}
-
-      {partida && (
-        <main className="mt-6 flex flex-1 flex-col gap-6">
-          <StatusTurno
-            vezDoJogador={vezDoJogador}
-            processando={processando}
-            finalizada={finalizada}
-            vencedorNome={vencedor?.nome ?? null}
-          />
-
-          <div className="flex flex-col items-center justify-center gap-8 lg:flex-row lg:items-start">
-            {/* IA */}
-            <AreaJogador titulo={ia?.nome ?? 'Computador'} cartas={ia?.cartas.length ?? 0}>
-              <Carta carta={cartaIA} revelada={revelarIA} />
-            </AreaJogador>
-
-            {/* Centro: monte + resultado */}
-            <CentroMesa
-              monte={partida.monte.length}
-              resultado={ultimoResultado?.motivo ?? null}
+      <div className="flex justify-center items-center gap-8 md:gap-16 mb-6 flex-wrap">
+        <div className="text-center">
+          <p className="mb-3 font-bold text-hemp-gold">
+            {jogadorHumano.nome} 
+            <span className="ml-2 text-sm bg-hemp-dark px-2 py-1 rounded-full">
+              {jogadorHumano.cartas.length} cartas
+            </span>
+          </p>
+          {cartaHumano && (
+            <CartaVisual 
+              carta={cartaHumano} 
+              virada={true}
+              onEscolherAtributo={jogarAtributo}
+              podeEscolher={ehMinhaVez}
             />
+          )}
+          {!ehMinhaVez && <p className="mt-2 text-sm text-gray-400">Aguardando oponente...</p>}
+        </div>
 
-            {/* Jogador */}
-            <AreaJogador titulo={jogador?.nome ?? 'Você'} cartas={jogador?.cartas.length ?? 0}>
-              <Carta
-                carta={cartaJogador}
-                revelada
-                interativa={vezDoJogador}
-                atributoDestaque={atributoDestaque}
-                onEscolherAtributo={(attr: Atributo) => jogarAtributo(attr)}
-              />
-            </AreaJogador>
-          </div>
+        <div className="text-4xl font-bold text-hemp-gold">VS</div>
 
-          <Historico
-            entradas={
-              partida.historico.map((r) => ({
-                atributo: r.atributo,
-                empate: r.empate,
-                vencedorId: r.vencedorId,
-                motivo: r.motivo,
-              }))
-            }
-            nomePorId={(id) =>
-              partida.jogadores.find((j) => j.id === id)?.nome ?? id
-            }
-          />
-        </main>
-      )}
-    </div>
-  );
-}
-
-function Header({
-  rodada,
-  emJogo,
-  cartasJogador,
-  cartasIA,
-  onIniciar,
-  iniciada,
-}: {
-  rodada: number;
-  emJogo: boolean;
-  cartasJogador: number;
-  cartasIA: number;
-  onIniciar: () => void;
-  iniciada: boolean;
-}) {
-  return (
-    <header className="flex flex-wrap items-center justify-between gap-4">
-      <div className="flex items-center gap-3">
-        <span className="text-4xl">🌿</span>
-        <div>
-          <h1 className="font-display text-3xl uppercase tracking-wide text-hemp-200">
-            Hemp Trunfo
-          </h1>
-          {emJogo && (
-            <p className="text-sm text-hemp-300">
-              Rodada {rodada} · Você {cartasJogador} × {cartasIA} CPU
-            </p>
+        <div className="text-center">
+          <p className="mb-3 font-bold text-gray-400">
+            {jogadorIA.nome}
+            <span className="ml-2 text-sm bg-hemp-dark px-2 py-1 rounded-full">
+              {jogadorIA.cartas.length} cartas
+            </span>
+          </p>
+          {cartaIA && (
+            <CartaVisual 
+              carta={cartaIA} 
+              virada={ehMinhaVez}
+            />
           )}
         </div>
       </div>
-      <button
-        type="button"
-        onClick={onIniciar}
-        className="rounded-xl bg-hemp-500 px-5 py-2.5 font-semibold text-white shadow-lg transition hover:bg-hemp-400 active:scale-95"
-      >
-        {iniciada ? 'Reiniciar' : 'Iniciar partida'}
-      </button>
-    </header>
-  );
-}
 
-function TelaInicial({ onIniciar }: { onIniciar: () => void }) {
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-6 py-20 text-center">
-      <span className="text-8xl">🍃</span>
-      <h2 className="max-w-xl font-display text-4xl uppercase leading-tight text-hemp-100">
-        O Super Trunfo das genéticas
-      </h2>
-      <p className="max-w-md text-hemp-300">
-        Escolha o atributo da sua carta, supere o oponente e conquiste todas as
-        cartas. Maior valor vence. Empate vai para o monte. Vantagem sempre
-        vence; Revés sempre perde.
-      </p>
-      <button
-        type="button"
-        onClick={onIniciar}
-        className="rounded-2xl bg-hemp-500 px-8 py-3 text-lg font-bold text-white shadow-xl transition hover:bg-hemp-400 active:scale-95"
-      >
-        Começar a jogar
-      </button>
-    </div>
-  );
-}
-
-function StatusTurno({
-  vezDoJogador,
-  processando,
-  finalizada,
-  vencedorNome,
-}: {
-  vezDoJogador: boolean;
-  processando: boolean;
-  finalizada: boolean;
-  vencedorNome: string | null;
-}) {
-  let texto: string;
-  let cor: string;
-
-  if (finalizada) {
-    texto = `Fim de jogo! ${vencedorNome} venceu a partida 🏆`;
-    cor = 'bg-amber-500/20 text-amber-200 ring-amber-400/40';
-  } else if (vezDoJogador) {
-    texto = 'Sua vez: escolha um atributo na sua carta.';
-    cor = 'bg-hemp-500/20 text-hemp-100 ring-hemp-400/40';
-  } else if (processando) {
-    texto = 'Computador está pensando...';
-    cor = 'bg-sky-500/20 text-sky-100 ring-sky-400/40';
-  } else {
-    texto = 'Aguardando...';
-    cor = 'bg-white/10 text-white/70 ring-white/20';
-  }
-
-  return (
-    <div
-      className={`mx-auto rounded-full px-5 py-2 text-sm font-semibold ring-1 ${cor}`}
-    >
-      {texto}
-    </div>
-  );
-}
-
-function AreaJogador({
-  titulo,
-  cartas,
-  children,
-}: {
-  titulo: string;
-  cartas: number;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="flex flex-col items-center gap-3">
-      <div className="flex items-center gap-2 rounded-full bg-hemp-900/60 px-4 py-1.5">
-        <span className="font-semibold text-hemp-100">{titulo}</span>
-        <span className="rounded-full bg-hemp-600 px-2 py-0.5 text-xs font-bold text-white">
-          {cartas} cartas
-        </span>
-      </div>
-      {children}
-    </section>
-  );
-}
-
-function CentroMesa({
-  monte,
-  resultado,
-}: {
-  monte: number;
-  resultado: string | null;
-}) {
-  return (
-    <div className="flex w-full max-w-xs flex-col items-center justify-center gap-4 lg:self-center">
-      <div className="flex flex-col items-center gap-1 rounded-2xl bg-hemp-900/60 px-6 py-4">
-        <span className="text-3xl">🃏</span>
-        <span className="text-xs uppercase tracking-widest text-hemp-300">
-          Monte de empate
-        </span>
-        <span className="font-display text-2xl text-hemp-100">{monte}</span>
+      <div className="max-w-2xl mx-auto grid grid-cols-2 gap-4 mb-4">
+        <div className="bg-hemp-dark/50 rounded-xl p-3 text-center">
+          <p className="text-xs text-gray-400">Monte de Empate</p>
+          <p className="text-2xl font-bold text-hemp-gold">{partida.monteEmpate.length}</p>
+        </div>
+        <div className="bg-hemp-dark/50 rounded-xl p-3 text-center">
+          <p className="text-xs text-gray-400">Total no Jogo</p>
+          <p className="text-2xl font-bold text-hemp-gold">
+            {jogadorHumano.cartas.length + jogadorIA.cartas.length + partida.monteEmpate.length}
+          </p>
+        </div>
       </div>
 
-      <AnimatePresence mode="wait">
-        {resultado && (
-          <motion.div
-            key={resultado}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="rounded-xl bg-black/30 px-4 py-3 text-center text-sm text-hemp-100"
-          >
-            {resultado}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="max-w-2xl mx-auto bg-hemp-dark/50 rounded-xl p-4">
+        <h3 className="text-hemp-gold font-bold mb-2 text-sm">📜 Últimas rodadas</h3>
+        <div className="space-y-1 text-sm max-h-32 overflow-y-auto">
+          <AnimatePresence>
+            {partida.historico.slice(-5).map((h, i) => (
+              <motion.p 
+                key={i} 
+                className="text-gray-300"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+              >
+                {h}
+              </motion.p>
+            ))}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
-  );
-}
-
-interface EntradaHistorico {
-  atributo: Atributo | null;
-  empate: boolean;
-  vencedorId: string | null;
-  motivo: string;
-}
-
-function Historico({
-  entradas,
-  nomePorId,
-}: {
-  entradas: EntradaHistorico[];
-  nomePorId: (id: string) => string;
-}) {
-  if (entradas.length === 0) return null;
-  const recentes = [...entradas].reverse().slice(0, 6);
-
-  return (
-    <section className="mt-2">
-      <h3 className="mb-2 text-sm font-semibold uppercase tracking-widest text-hemp-300">
-        Histórico
-      </h3>
-      <ul className="flex flex-col gap-1.5">
-        {recentes.map((e, i) => (
-          <li
-            key={i}
-            className="flex items-center gap-3 rounded-lg bg-hemp-900/40 px-3 py-2 text-sm"
-          >
-            <span className="rounded bg-hemp-700 px-2 py-0.5 text-xs font-semibold text-hemp-100">
-              {e.atributo ? ATRIBUTO_LABEL[e.atributo] : 'Especial'}
-            </span>
-            <span className="text-hemp-200">
-              {e.empate
-                ? 'Empate → monte'
-                : `Vitória de ${nomePorId(e.vencedorId ?? '')}`}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
+  )
 }

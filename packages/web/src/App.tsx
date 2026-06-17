@@ -1,5 +1,7 @@
-import Mesa from './components/Mesa';
+import { Mesa } from './components/Mesa'
 
-export default function App() {
-  return <Mesa />;
+function App() {
+  return <Mesa />
 }
+
+export default App
