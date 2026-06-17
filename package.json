@@ -1,0 +1,15 @@
+{
+  "name": "hemp-trunfo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Jogo de cartas estilo Super Trunfo baseado no baralho Hemp Trunfo",
+  "workspaces": [
+    "packages/engine",
+    "packages/web"
+  ],
+  "scripts": {
+    "build:engine": "npm run build --workspace @hemp-trunfo/engine",
+    "dev": "npm run dev --workspace @hemp-trunfo/web",
+    "build": "npm run build:engine && npm run build --workspace @hemp-trunfo/web"
+  }
+}

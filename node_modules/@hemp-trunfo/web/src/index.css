@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #2c3e1b 0%, #15220a 70%);
+  color: #f3f8ec;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
