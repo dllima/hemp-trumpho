@@ -33,7 +33,7 @@ export function Mesa() {
           <p className="text-gray-400 mb-2 text-lg">O jogo de cartas das genéticas</p>
           <p className="text-gray-500 mb-8 text-sm">28 genéticas · 7 atributos · 1 vencedor</p>
           <motion.button
-            onClick={() => iniciar(['Você', 'Computador'])}
+            onClick={() => iniciar(['Você', 'Oponente'])}
             className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold text-white transition-all hover:scale-105 shadow-lg"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -59,7 +59,7 @@ export function Mesa() {
           </motion.h1>
           <p className="text-3xl md:text-4xl mb-2">{v?.nome} venceu!</p>
           <p className="text-gray-400 mb-8">Rodadas: {partida.rodada - 1}</p>
-          <button onClick={() => iniciar(['Você', 'Computador'])} className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold text-white transition-all hover:scale-105">
+          <button onClick={() => iniciar(['Você', 'Oponente'])} className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold text-white transition-all hover:scale-105">
             🔄 Jogar Novamente
           </button>
         </div>
@@ -74,7 +74,7 @@ export function Mesa() {
 
   const resultadoTexto = !resultadoPendente ? '' :
     resultadoPendente.vencedorId === jogadorHumano?.id ? (ehUltimaRodada ? '🏆 Você venceu o jogo!' : '🎉 Você venceu a rodada!') :
-    resultadoPendente.vencedorId === jogadorIA?.id ? (ehUltimaRodada ? '💀 Computador venceu o jogo!' : '😞 Computador venceu a rodada!') :
+    resultadoPendente.vencedorId === jogadorIA?.id ? (ehUltimaRodada ? '💀 Oponente venceu o jogo!' : '😞 Oponente venceu a rodada!') :
     '🤝 Empate! Cartas vão para o monte'
 
   return (
@@ -145,7 +145,7 @@ export function Mesa() {
                 ? (cartaHumanoEspecial
                     ? <p className="text-xs text-hemp-gold animate-pulse text-center max-w-[12rem]">✨ Carta especial! Resolvendo…</p>
                     : <p className="text-xs text-gray-400 text-center max-w-[12rem]">Escolha um atributo na sua carta</p>)
-                : <p className="text-xs text-gray-400 animate-pulse">⏳ Computador está jogando...</p>}
+                : <p className="text-xs text-gray-400 animate-pulse">⏳ Oponente está jogando...</p>}
             </div>
           )}
         </div>
