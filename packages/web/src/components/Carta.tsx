@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import type { Carta as CartaType, CartaGenetica, Atributo } from '@hemp-trunfo/engine'
+import { CartaVerso } from './CartaVerso'
 
 const icones: Record<Atributo, string> = {
   thc: '🍃', cbd: '🍃', relaxamento: '🧘', foco: '👁️', 
@@ -37,7 +38,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
   // especial do oponente só aparece no momento da revelação da rodada.
   if (carta.tipo === 'vantagem' || carta.tipo === 'reves') {
     if (!virada) {
-      return <CartaVerso ehMinhaVez={ehMinhaVez} />
+      return <CartaVerso tamanho="normal" />
     }
     if (carta.tipo === 'vantagem') {
       return (
@@ -109,30 +110,10 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
         </div>
 
         {/* VERSO */}
-        <div 
-          className="absolute inset-0 backface-hidden rounded-2xl bg-gradient-to-br from-hemp-purple to-black flex items-center justify-center border-2 border-hemp-gold/40"
-          style={{ transform: 'rotateY(180deg)' }}
-        >
-          <div className="text-center">
-            <div className="text-7xl mb-4">🌿</div>
-            <p className="text-hemp-gold font-bold text-xl tracking-widest">HEMP</p>
-            <p className="text-hemp-gold font-bold text-xl tracking-widest">TRUMPHO</p>
-          </div>
+        <div className="absolute inset-0 backface-hidden" style={{ transform: 'rotateY(180deg)' }}>
+          <CartaVerso tamanho="normal" />
         </div>
       </motion.div>
-    </div>
-  )
-}
-
-// Verso da carta (face para baixo), reutilizado pelas cartas especiais ainda não reveladas.
-function CartaVerso({ ehMinhaVez }: { ehMinhaVez?: boolean }) {
-  return (
-    <div className={`w-64 h-96 rounded-2xl bg-gradient-to-br from-hemp-purple to-black flex items-center justify-center border-2 shadow-2xl ${ehMinhaVez ? 'border-hemp-gold' : 'border-hemp-gold/40'}`}>
-      <div className="text-center">
-        <div className="text-7xl mb-4">🌿</div>
-        <p className="text-hemp-gold font-bold text-xl tracking-widest">HEMP</p>
-        <p className="text-hemp-gold font-bold text-xl tracking-widest">TRUMPHO</p>
-      </div>
     </div>
   )
 }
