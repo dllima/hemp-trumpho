@@ -58,13 +58,17 @@ export const useJogoStore = create<JogoState>((set, get) => ({
       let vencedorId: string
       let mensagem: string
 
+      const idHumano = partida.jogadores[0].id
+
       if (vantagem) {
         vencedorId = vantagem.id
-        mensagem = `${vantagem.nome} tirou VANTAGEM e venceu o jogo!`
+        const quem = vantagem.id === idHumano ? 'Você' : 'Oponente'
+        mensagem = `${quem} tirou VANTAGEM e venceu a partida!`
       } else {
         const outro = jogadoresAtivos.find(j => j.id !== reves!.id)
         vencedorId = outro ? outro.id : reves!.id
-        mensagem = `${reves!.nome} tirou REVÉS e perdeu o jogo!`
+        const quem = reves!.id === idHumano ? 'Você' : 'Oponente'
+        mensagem = `${quem} tirou REVÉS e perdeu a partida!`
       }
 
       const vencedorNome = partida.jogadores.find(j => j.id === vencedorId)?.nome ?? ''
