@@ -8,7 +8,7 @@
     "packages/web"
   ],
   "scripts": {
-    "build:engine": "npm run build --workspace @hemp-Trumpho/engine",
+    "build:engine": "npm run build --workspace @hemp-trunfo/engine",
     "dev": "npm run dev --workspace @hemp-Trumpho/web",
     "build": "npm run build:engine && npm run build --workspace @hemp-Trumpho/web"
   },
