@@ -1,7 +1,7 @@
 {
   "name": "@hemp-trunfo/engine",
   "version": "0.1.0",
-  "description": "Lógica de jogo do Hemp Trunfo em TypeScript puro",
+  "description": "Lógica de jogo do Hemp Trumpho em TypeScript puro",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

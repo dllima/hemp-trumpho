@@ -1,95 +1,182 @@
-/**
- * Helper para montar uma carta genética de forma compacta.
- * A ordem dos valores segue: thc, cbd, relaxamento, foco, felicidade, fome, sono.
- */
-function genetica(id, nome, linhagem, descricao, valores) {
-    const [thc, cbd, relaxamento, foco, felicidade, fome, sono] = valores;
-    return {
-        id,
-        tipo: 'genetica',
-        nome,
-        linhagem,
-        descricao,
-        atributos: { thc, cbd, relaxamento, foco, felicidade, fome, sono },
-    };
-}
-/**
- * As 28 genéticas do baralho Hemp Trunfo.
- * Atributos numa escala de 0 a 100, balanceados para que nenhuma carta
- * domine todos os atributos simultaneamente.
- */
-export const GENETICAS = [
-    //        id          nome                 linhagem    descrição                        thc cbd relax foco feliz fome sono
-    genetica('g01', 'OG Kush', 'Híbrida', 'Terroso e cítrico, clássico atemporal', [86, 12, 78, 40, 72, 80, 70]),
-    genetica('g02', 'Sour Diesel', 'Sativa', 'Diesel pungente e energizante', [88, 8, 35, 90, 84, 55, 20]),
-    genetica('g03', 'Granddaddy Purple', 'Indica', 'Uva e frutas com final relaxante', [82, 14, 95, 25, 70, 78, 92]),
-    genetica('g04', 'White Widow', 'Híbrida', 'Resinosa e equilibrada', [80, 16, 65, 60, 78, 62, 55]),
-    genetica('g05', 'Blue Dream', 'Híbrida', 'Mirtilo doce e suave', [78, 18, 60, 72, 88, 58, 45]),
-    genetica('g06', 'Northern Lights', 'Indica', 'Doce e terrosa, profundamente calmante', [84, 10, 92, 30, 68, 70, 90]),
-    genetica('g07', 'Jack Herer', 'Sativa', 'Pinho e especiarias, cerebral', [85, 12, 38, 92, 80, 50, 22]),
-    genetica('g08', 'Girl Scout Cookies', 'Híbrida', 'Doce e amadeirada, potente', [90, 9, 72, 55, 82, 84, 60]),
-    genetica('g09', 'Pineapple Express', 'Híbrida', 'Abacaxi tropical e energético', [76, 15, 50, 78, 90, 66, 35]),
-    genetica('g10', 'AK-47', 'Híbrida', 'Floral e terrosa, longa duração', [83, 13, 58, 68, 76, 60, 48]),
-    genetica('g11', 'Gorilla Glue #4', 'Híbrida', 'Resina densa, efeito grudento', [92, 7, 84, 45, 74, 82, 78]),
-    genetica('g12', 'Amnesia Haze', 'Sativa', 'Cítrica e terrosa, euforizante', [87, 11, 32, 94, 86, 52, 18]),
-    genetica('g13', 'Bubba Kush', 'Indica', 'Café e chocolate, sedativa', [79, 14, 94, 22, 64, 76, 95]),
-    genetica('g14', 'Green Crack', 'Sativa', 'Manga doce, foco afiado', [81, 10, 30, 96, 88, 48, 15]),
-    genetica('g15', 'Charlotte\'s Web', 'CBD', 'Rica em CBD, quase sem efeito psicoativo', [6, 92, 80, 50, 60, 30, 65]),
-    genetica('g16', 'ACDC', 'CBD', 'Equilíbrio terapêutico, baixo THC', [10, 88, 75, 55, 58, 28, 60]),
-    genetica('g17', 'Harlequin', 'CBD', 'Sativa rica em CBD, clareza mental', [12, 82, 55, 70, 66, 35, 40]),
-    genetica('g18', 'Cannatonic', 'CBD', 'Suave e relaxante, alto CBD', [14, 85, 78, 48, 62, 32, 58]),
-    genetica('g19', 'Durban Poison', 'Sativa', 'Anis doce, pura sativa', [86, 9, 28, 95, 85, 46, 16]),
-    genetica('g20', 'Wedding Cake', 'Híbrida', 'Baunilha e amêndoa, rica', [91, 8, 76, 52, 80, 86, 64]),
-    genetica('g21', 'Zkittlez', 'Indica', 'Frutas doces, calmante', [80, 13, 88, 35, 84, 80, 82]),
-    genetica('g22', 'Trainwreck', 'Híbrida', 'Limão e pinho, impacto rápido', [85, 10, 45, 82, 82, 56, 30]),
-    genetica('g23', 'Purple Haze', 'Sativa', 'Frutas doces, nostálgica', [82, 12, 42, 84, 90, 54, 28]),
-    genetica('g24', 'Skywalker OG', 'Indica', 'Especiarias e frutas, potente', [89, 11, 90, 32, 72, 78, 88]),
-    genetica('g25', 'Super Lemon Haze', 'Sativa', 'Limão azedo, vibrante', [84, 10, 36, 90, 88, 50, 24]),
-    genetica('g26', 'Do-Si-Dos', 'Indica', 'Floral e doce, corporal', [88, 9, 91, 28, 70, 82, 86]),
-    genetica('g27', 'Strawberry Cough', 'Sativa', 'Morango doce, social', [77, 14, 40, 80, 92, 58, 32]),
-    genetica('g28', 'Gelato', 'Híbrida', 'Sobremesa cremosa, equilibrada', [85, 11, 70, 58, 86, 84, 58]),
+export const baralhoCompleto = [
+    {
+        id: 'A1', nome: 'Clockwork Orange', banco: 'Crazy Seeds',
+        descricao: 'Homenagem ao clássico time holandês de 1972. Terpenos cítricos, cheiro forte de laranja.',
+        thc: 21, cbd: 0.03, relaxamento: 25, foco: 91, felicidade: 41, fome: 59, sono: 20,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A2', nome: 'Monkey Fever', banco: 'Crazy Seeds',
+        descricao: 'A "Febre do Macaco" tem sabor de uva passa. Genética 100% Indica, Afghan com Gorilla.',
+        thc: 21, cbd: 0.04, relaxamento: 94, foco: 47, felicidade: 63, fome: 81, sono: 100,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A3', nome: 'Stinky Fat', banco: 'Crazy Seeds',
+        descricao: 'Cheiro de queijo azedo. Flores densas, ótima para amarração.',
+        thc: 25, cbd: 0.11, relaxamento: 57, foco: 69, felicidade: 90, fome: 77, sono: 55,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A4', nome: 'Crazy Haze', banco: 'Crazy Seeds',
+        descricao: 'Cepa pegajosa. Nome significa "Névoa Maluca", flores podem ficar roxas.',
+        thc: 21, cbd: 0.01, relaxamento: 100, foco: 27, felicidade: 75, fome: 84, sono: 93,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A5', nome: 'Black Harpia', banco: 'Crazy Seeds',
+        descricao: 'Genética brasileira com flores pretas. Nome faz jus ao "Gavião Real".',
+        thc: 26, cbd: 0.03, relaxamento: 70, foco: 63, felicidade: 71, fome: 55, sono: 70,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A6', nome: 'Purple Dream', banco: 'Crazy Seeds',
+        descricao: 'Flores roxas intensas. Relaxante profundo com toques criativos.',
+        thc: 24, cbd: 0.05, relaxamento: 88, foco: 45, felicidade: 82, fome: 70, sono: 85,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A7', nome: 'Green Goblin', banco: 'Crazy Seeds',
+        descricao: 'Energia explosiva e foco laser. Para tarefas criativas.',
+        thc: 23, cbd: 0.02, relaxamento: 15, foco: 95, felicidade: 78, fome: 65, sono: 10,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A8', nome: 'Golden Kush', banco: 'Crazy Seeds',
+        descricao: 'Tricomas dourados. Sabor terroso com notas cítricas.',
+        thc: 22, cbd: 0.08, relaxamento: 65, foco: 55, felicidade: 70, fome: 90, sono: 60,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A9', nome: 'Silver Haze', banco: 'Crazy Seeds',
+        descricao: 'Tricomas prateados. Efeito cerebral energético.',
+        thc: 20, cbd: 0.04, relaxamento: 40, foco: 85, felicidade: 75, fome: 50, sono: 30,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A10', nome: 'Red Dragon', banco: 'Crazy Seeds',
+        descricao: 'Flores avermelhadas, aroma picante. Potência elevada.',
+        thc: 28, cbd: 0.01, relaxamento: 80, foco: 35, felicidade: 85, fome: 95, sono: 75,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A11', nome: 'Blueberry Kush', banco: 'Crazy Seeds',
+        descricao: 'Sabor de mirtilo, relaxante corporal intenso.',
+        thc: 19, cbd: 0.06, relaxamento: 92, foco: 30, felicidade: 88, fome: 85, sono: 90,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A12', nome: 'White Widow', banco: 'Crazy Seeds',
+        descricao: 'Tricomas brancos como neve. Equilíbrio corpo e mente.',
+        thc: 20, cbd: 0.03, relaxamento: 60, foco: 72, felicidade: 80, fome: 60, sono: 45,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A13', nome: 'Northern Lights', banco: 'Crazy Seeds',
+        descricao: 'Lendas dizem que veio das estrelas. Sabor doce, sedativo.',
+        thc: 18, cbd: 0.02, relaxamento: 95, foco: 20, felicidade: 70, fome: 80, sono: 95,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A14', nome: 'Sour Diesel', banco: 'Crazy Seeds',
+        descricao: 'Aroma de combustível cítrico. Efeito cerebral energético.',
+        thc: 22, cbd: 0.01, relaxamento: 30, foco: 90, felicidade: 85, fome: 45, sono: 15,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A15', nome: 'OG Kush', banco: 'Crazy Seeds',
+        descricao: 'Clássico da Costa Oeste. Limão, pinho e especiarias.',
+        thc: 24, cbd: 0.04, relaxamento: 75, foco: 50, felicidade: 72, fome: 88, sono: 65,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A16', nome: 'Amnesia Haze', banco: 'Crazy Seeds',
+        descricao: 'Premiada, sabor cítrico e floral. Efeito cerebral intenso.',
+        thc: 23, cbd: 0.02, relaxamento: 35, foco: 88, felicidade: 90, fome: 55, sono: 25,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A17', nome: 'Granddaddy Purple', banco: 'Crazy Seeds',
+        descricao: 'Flores roxas profundas, aroma de uva. Relaxante poderoso.',
+        thc: 17, cbd: 0.05, relaxamento: 98, foco: 15, felicidade: 65, fome: 92, sono: 100,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A18', nome: 'Jack Herer', banco: 'Crazy Seeds',
+        descricao: 'Homenagem ao ativista. Pinho cítrico, criatividade e clareza.',
+        thc: 21, cbd: 0.03, relaxamento: 45, foco: 93, felicidade: 87, fome: 50, sono: 20,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A19', nome: 'Girl Scout Cookies', banco: 'Crazy Seeds',
+        descricao: 'Doce de menta e chocolate. Equilibrado com toque de euforia.',
+        thc: 25, cbd: 0.02, relaxamento: 70, foco: 60, felicidade: 92, fome: 85, sono: 55,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A20', nome: 'Gorilla Glue', banco: 'Crazy Seeds',
+        descricao: 'Tricomas pegajosos. Potência extrema, efeito pesado.',
+        thc: 27, cbd: 0.01, relaxamento: 85, foco: 25, felicidade: 75, fome: 90, sono: 80,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A21', nome: 'Pineapple Express', banco: 'Crazy Seeds',
+        descricao: 'Sabor tropical de abacaxi. Efeito energético e alegre.',
+        thc: 20, cbd: 0.04, relaxamento: 50, foco: 80, felicidade: 95, fome: 70, sono: 30,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A22', nome: 'AK-47', banco: 'Crazy Seeds',
+        descricao: 'Híbrida equilibrada, sabor terroso e floral. Social e criativa.',
+        thc: 19, cbd: 0.03, relaxamento: 55, foco: 75, felicidade: 80, fome: 65, sono: 40,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A23', nome: 'Chemdawg', banco: 'Crazy Seeds',
+        descricao: 'Aroma químico único. Efeito cerebral intenso e misterioso.',
+        thc: 24, cbd: 0.01, relaxamento: 40, foco: 85, felicidade: 70, fome: 60, sono: 35,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A24', nome: 'Mango Kush', banco: 'Crazy Seeds',
+        descricao: 'Sabor doce de manga tropical. Relaxante e feliz.',
+        thc: 18, cbd: 0.06, relaxamento: 78, foco: 40, felicidade: 88, fome: 95, sono: 70,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A25', nome: 'Lemon Haze', banco: 'Crazy Seeds',
+        descricao: 'Sabor cítrico fresco de limão. Cerebral claro e energético.',
+        thc: 21, cbd: 0.03, relaxamento: 30, foco: 92, felicidade: 86, fome: 55, sono: 20,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A26', nome: 'Bubble Gum', banco: 'Crazy Seeds',
+        descricao: 'Sabor doce de chiclete rosa. Feliz e descontraído.',
+        thc: 17, cbd: 0.04, relaxamento: 62, foco: 55, felicidade: 93, fome: 75, sono: 50,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A27', nome: 'Strawberry Cough', banco: 'Crazy Seeds',
+        descricao: 'Sabor doce de morango. Cerebral sociável.',
+        thc: 19, cbd: 0.02, relaxamento: 42, foco: 78, felicidade: 89, fome: 58, sono: 28,
+        tipo: 'genetica'
+    },
+    {
+        id: 'A28', nome: 'Durban Poison', banco: 'Crazy Seeds',
+        descricao: 'Landrace da África do Sul. Anis, energético puro.',
+        thc: 22, cbd: 0.01, relaxamento: 20, foco: 96, felicidade: 84, fome: 40, sono: 12,
+        tipo: 'genetica'
+    },
+    {
+        id: 'VANTAGEM', nome: 'Vantagem', tipo: 'vantagem', efeito: 'vence_automatico'
+    },
+    {
+        id: 'REVES', nome: 'Revés', tipo: 'reves', efeito: 'perde_automatico'
+    },
+    {
+        id: 'INFO', nome: 'Breve História da Cannabis', tipo: 'informativa', efeito: 'informativa'
+    }
 ];
-/** Carta VANTAGEM: vence automaticamente a rodada. */
-export const CARTA_VANTAGEM = {
-    id: 's-vantagem',
-    tipo: 'vantagem',
-    nome: 'Vantagem',
-    descricao: 'Vence automaticamente a rodada, independentemente do atributo.',
-};
-/** Carta REVÉS: perde automaticamente a rodada. */
-export const CARTA_REVES = {
-    id: 's-reves',
-    tipo: 'reves',
-    nome: 'Revés',
-    descricao: 'Perde automaticamente a rodada, independentemente do atributo.',
-};
-/** Carta INFORMATIVA: curiosidades sobre a planta. Não é jogável. */
-export const CARTA_INFORMATIVA = {
-    id: 's-informativa',
-    tipo: 'informativa',
-    nome: 'Você Sabia?',
-    descricao: 'A cannabis produz mais de 100 canabinoides diferentes. THC e CBD são apenas os mais conhecidos.',
-};
-/** Carta REGRAS: explica como jogar. Não é jogável. */
-export const CARTA_REGRAS = {
-    id: 's-regras',
-    tipo: 'regras',
-    nome: 'Regras',
-    descricao: 'Maior valor vence a rodada. Empate manda as cartas para o monte. Vantagem sempre vence, Revés sempre perde.',
-};
-/** Todas as cartas especiais. */
-export const ESPECIAIS = [
-    CARTA_VANTAGEM,
-    CARTA_REVES,
-    CARTA_INFORMATIVA,
-    CARTA_REGRAS,
-];
-/** Baralho completo: 28 genéticas + 4 especiais = 32 cartas. */
-export const BARALHO_COMPLETO = [...GENETICAS, ...ESPECIAIS];
-/**
- * Embaralha um array de cartas (Fisher-Yates) retornando uma nova lista.
- * Não muta o array original.
- */
 export function embaralhar(cartas) {
     const copia = [...cartas];
     for (let i = copia.length - 1; i > 0; i--) {
@@ -98,24 +185,7 @@ export function embaralhar(cartas) {
     }
     return copia;
 }
-/**
- * Verifica se uma carta pode ser usada em rodada (genéticas, Vantagem e Revés).
- * Cartas Informativa e Regras são removidas do jogo.
- */
-export function ehCartaJogavel(carta) {
-    return (carta.tipo === 'genetica' ||
-        carta.tipo === 'vantagem' ||
-        carta.tipo === 'reves');
-}
-/**
- * Filtra apenas as cartas jogáveis de um conjunto,
- * removendo as cartas Informativa e Regras.
- */
 export function filtrarCartasJogaveis(cartas) {
-    return cartas.filter(ehCartaJogavel);
-}
-/** Valor de um atributo numérico de qualquer carta (especiais retornam null). */
-export function valorAtributo(carta, atributo) {
-    return carta.tipo === 'genetica' ? carta.atributos[atributo] : null;
+    return cartas.filter(c => c.tipo === 'genetica' || c.tipo === 'vantagem' || c.tipo === 'reves');
 }
 //# sourceMappingURL=baralho.js.map
