@@ -80,7 +80,7 @@ export function Mesa() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-hemp-dark to-black p-4 md:p-8">
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6 max-w-4xl mx-auto gap-3">
+      <div className="flex flex-col lg:flex-row justify-between items-center mb-6 max-w-4xl mx-auto gap-3">
         <h1 className="text-2xl font-bold text-hemp-gold">🌿 Hemp Trumpho</h1>
         <div className="flex gap-3">
           <span className="bg-hemp-dark border border-hemp-green/50 px-4 py-2 rounded-full text-sm">
@@ -93,7 +93,7 @@ export function Mesa() {
       </div>
 
       {/* ÁREA DE JOGO - RESPONSIVO */}
-      <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-6 md:gap-12 mb-8">
+      <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start gap-6 lg:gap-12 mb-8">
 
         {/* JOGADOR */}
         <div className="flex flex-col items-center order-1">
@@ -119,7 +119,7 @@ export function Mesa() {
         </div>
 
         {/* CENTRO: VS / resultado / controle de ritmo */}
-        <div className="flex flex-col items-center justify-center md:pt-32 order-2 min-w-[12rem]">
+        <div className="flex flex-col items-center justify-center lg:pt-32 order-2 min-w-[12rem]">
           {revelado ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.7 }}
