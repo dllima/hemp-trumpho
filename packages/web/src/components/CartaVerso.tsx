@@ -9,7 +9,7 @@ interface CartaVersoProps {
 // dourado) e "RADIO HEMP" curvado na base.
 // Cores fora do tema vêm de inline styles (Tailwind v4 — sem tailwind.config.js).
 export function CartaVerso({ tamanho = 'normal' }: CartaVersoProps) {
-  const dimensao = tamanho === 'pequeno' ? 'w-56 h-[340px]' : 'w-64 h-96'
+  const dimensao = tamanho === 'pequeno' ? 'w-56 h-[340px]' : 'w-56 h-[360px] sm:w-64 sm:h-96'
 
   return (
     <div

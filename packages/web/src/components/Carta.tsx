@@ -42,7 +42,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
     }
     if (carta.tipo === 'vantagem') {
       return (
-        <div className="w-64 h-96 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-2xl p-6 shadow-2xl border-2 border-yellow-300 flex flex-col items-center justify-center text-center">
+        <div className="w-56 h-[360px] sm:w-64 sm:h-96 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-2xl p-6 shadow-2xl border-2 border-yellow-300 flex flex-col items-center justify-center text-center">
           <div className="text-6xl mb-4">⭐</div>
           <h2 className="text-3xl font-bold text-white">VANTAGEM</h2>
           <p className="text-yellow-100 mt-2">Vitória automática!</p>
@@ -50,7 +50,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
       )
     }
     return (
-      <div className="w-64 h-96 bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-6 shadow-2xl border-2 border-red-500 flex flex-col items-center justify-center text-center">
+      <div className="w-56 h-[360px] sm:w-64 sm:h-96 bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-6 shadow-2xl border-2 border-red-500 flex flex-col items-center justify-center text-center">
         <div className="text-6xl mb-4">💀</div>
         <h2 className="text-3xl font-bold text-white">REVÉS</h2>
         <p className="text-red-100 mt-2">Derrota automática!</p>
@@ -62,7 +62,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
   const attrs: Atributo[] = ['thc', 'cbd', 'relaxamento', 'foco', 'felicidade', 'fome', 'sono']
 
   return (
-    <div className={`relative w-64 h-96 perspective-1000 ${ehMinhaVez ? 'animate-pulse-gold' : ''}`}>
+    <div className={`relative w-56 h-[360px] sm:w-64 sm:h-96 perspective-1000 ${ehMinhaVez ? 'animate-pulse-gold' : ''}`}>
       <motion.div 
         className="w-full h-full relative preserve-3d"
         animate={{ rotateY: virada ? 0 : 180 }}
@@ -89,7 +89,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
                 onClick={() => podeEscolher && onEscolher?.(attr)}
                 disabled={!podeEscolher}
                 className={`
-                  flex justify-between items-center px-2 py-1 rounded text-xs transition-all
+                  flex justify-between items-center px-2 py-2 md:py-1 rounded text-sm md:text-xs transition-all
                   ${podeEscolher 
                     ? 'hover:bg-hemp-light cursor-pointer bg-hemp-dark/60 hover:scale-105' 
                     : 'cursor-default bg-hemp-dark/30 opacity-50'
