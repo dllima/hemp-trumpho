@@ -15,6 +15,8 @@ export function Mesa() {
   useIA(1500)
 
   const historicoRodadas = useJogoStore(s => s.historicoRodadas)
+  const iniciarPartida = useJogoStore(s => s.iniciarPartida)
+  const modo = useJogoStore(s => s.modo)
 
   const revelado = !!resultadoPendente
   const cartaHumanoEspecial = !!cartaHumano && (cartaHumano.tipo === 'vantagem' || cartaHumano.tipo === 'reves')
@@ -36,14 +38,25 @@ export function Mesa() {
           </motion.h1>
           <p className="text-gray-400 mb-2 text-lg">O jogo de cartas das genéticas</p>
           <p className="text-gray-500 mb-8 text-sm">28 genéticas · 7 atributos · 1 vencedor</p>
-          <motion.button
-            onClick={() => iniciar(['Você', 'Oponente'])}
-            className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold text-white transition-all hover:scale-105 shadow-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            ▶ Iniciar Partida
-          </motion.button>
+          <p className="text-hemp-gold font-semibold mb-3 text-sm uppercase tracking-wide">Escolha o modo</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            {([
+              { m: 'rapido', label: '⚡ Rápido', sub: '5 cartas' },
+              { m: 'medio', label: '🎯 Médio', sub: '10 cartas' },
+              { m: 'completo', label: '🏆 Completo', sub: '15 cartas' },
+            ] as const).map(({ m, label, sub }) => (
+              <motion.button
+                key={m}
+                onClick={() => iniciarPartida(['Você', 'Oponente'], m)}
+                className="px-6 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl font-bold text-white transition-all shadow-lg flex flex-col items-center"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="text-lg">{label}</span>
+                <span className="text-xs text-hemp-gold/90 font-normal">{sub}</span>
+              </motion.button>
+            ))}
+          </div>
           <div className="mt-12 flex justify-center gap-3 text-2xl">
             <span>🍃</span><span>🧘</span><span>👁️</span><span>😊</span><span>🍴</span><span>😴</span>
           </div>
@@ -119,7 +132,10 @@ export function Mesa() {
       {/* HEADER */}
       <div className="flex flex-col lg:flex-row justify-between items-center mb-6 max-w-4xl mx-auto gap-3">
         <h1 className="text-2xl font-bold text-hemp-gold">🌿 Hemp Trumpho</h1>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap justify-center">
+          <span className="bg-hemp-dark border border-hemp-gold/40 px-4 py-2 rounded-full text-sm text-hemp-gold">
+            {({ rapido: '⚡ Rápido', medio: '🎯 Médio', completo: '🏆 Completo' })[modo]}
+          </span>
           <span className="bg-hemp-dark border border-hemp-green/50 px-4 py-2 rounded-full text-sm">
             Rodada <strong className="text-hemp-gold">{partida.rodada}</strong>
           </span>

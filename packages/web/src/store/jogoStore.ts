@@ -31,11 +31,17 @@ export interface HistoricoRodada {
   resultado: 'vitoria' | 'derrota' | 'empate'
 }
 
+export type ModoJogo = 'rapido' | 'medio' | 'completo'
+
+// Cartas por jogador em cada modo.
+const CARTAS_POR_MODO: Record<ModoJogo, number> = { rapido: 5, medio: 10, completo: 15 }
+
 interface JogoState {
   partida: EstadoPartida | null
   resultadoPendente: ResultadoPendente | null
   historicoRodadas: HistoricoRodada[]
-  iniciarPartida: (nomes: string[]) => void
+  modo: ModoJogo
+  iniciarPartida: (nomes: string[], modo?: ModoJogo) => void
   jogarAtributo: (atributo: Atributo) => void
   avancarRodada: () => void
   getCartaTopo: (jogadorId: string) => Carta | null
@@ -46,10 +52,12 @@ export const useJogoStore = create<JogoState>((set, get) => ({
   partida: null,
   resultadoPendente: null,
   historicoRodadas: [],
+  modo: 'completo',
 
-  iniciarPartida: (nomes) => {
-    const partida = criarPartida(nomes, baralhoCompleto)
-    set({ partida, resultadoPendente: null, historicoRodadas: [] })
+  iniciarPartida: (nomes, modo) => {
+    const modoEscolhido = modo ?? get().modo
+    const partida = criarPartida(nomes, baralhoCompleto, CARTAS_POR_MODO[modoEscolhido])
+    set({ partida, resultadoPendente: null, historicoRodadas: [], modo: modoEscolhido })
   },
 
   jogarAtributo: (atributo) => {

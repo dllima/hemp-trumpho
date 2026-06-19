@@ -4,20 +4,32 @@ import { compararRodada } from '../regras/comparador.js';
 
 export function criarPartida(
   nomesJogadores: string[],
-  cartasDisponiveis: Carta[]
+  cartasDisponiveis: Carta[],
+  cartasPorJogador?: number
 ): EstadoPartida {
   const cartasJogaveis = filtrarCartasJogaveis(cartasDisponiveis);
-  const embaralhadas = embaralhar(cartasJogaveis);
+  const n = nomesJogadores.length;
 
-  const cartasPorJogador = Math.floor(embaralhadas.length / nomesJogadores.length);
+  // Quantas cartas cada jogador recebe (default: divide todas as jogáveis = comportamento antigo).
+  const porJogador = cartasPorJogador ?? Math.floor(cartasJogaveis.length / n);
+  const totalCartas = porJogador * n;
+
+  // Monta o baralho do tamanho pedido, SEMPRE garantindo as cartas especiais.
+  let baralho: Carta[];
+  if (totalCartas >= cartasJogaveis.length) {
+    // Cabem todas as jogáveis: usa o baralho completo embaralhado.
+    baralho = embaralhar(cartasJogaveis);
+  } else {
+    const especiais = cartasJogaveis.filter(c => c.tipo === 'vantagem' || c.tipo === 'reves');
+    const geneticas = embaralhar(cartasJogaveis.filter(c => c.tipo === 'genetica'));
+    const qtdGeneticas = Math.max(0, totalCartas - especiais.length);
+    baralho = embaralhar([...especiais, ...geneticas.slice(0, qtdGeneticas)]);
+  }
 
   const jogadores: Jogador[] = nomesJogadores.map((nome, i) => ({
     id: `j${i}`,
     nome,
-    cartas: embaralhadas.slice(
-      i * cartasPorJogador, 
-      (i + 1) * cartasPorJogador
-    )
+    cartas: baralho.slice(i * porJogador, (i + 1) * porJogador)
   }));
 
   return {
