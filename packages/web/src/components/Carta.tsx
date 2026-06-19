@@ -42,19 +42,56 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
     }
     if (carta.tipo === 'vantagem') {
       return (
-        <div className="w-56 h-[360px] sm:w-64 sm:h-96 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-2xl p-6 shadow-2xl border-2 border-yellow-300 flex flex-col items-center justify-center text-center">
-          <div className="text-6xl mb-4">⭐</div>
+        <motion.div
+          className="w-56 h-[360px] sm:w-64 sm:h-96 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-700 rounded-2xl p-6 shadow-2xl border-2 border-yellow-300 flex flex-col items-center justify-center text-center"
+          initial={{ scale: 0.6 }}
+          animate={{
+            scale: [0.6, 1.15, 1],
+            boxShadow: [
+              '0 0 0px rgba(234,179,8,0)',
+              '0 0 40px rgba(234,179,8,0.85)',
+              '0 0 24px rgba(234,179,8,0.6)',
+            ],
+          }}
+          transition={{ duration: 0.7, times: [0, 0.6, 1], ease: 'easeOut' }}
+        >
+          <motion.div
+            className="text-6xl mb-4"
+            animate={{ scale: [1, 1.3, 1], rotate: [0, 12, -12, 0] }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            ⭐
+          </motion.div>
           <h2 className="text-3xl font-bold text-white">VANTAGEM</h2>
           <p className="text-yellow-100 mt-2">Vitória automática!</p>
-        </div>
+        </motion.div>
       )
     }
     return (
-      <div className="w-56 h-[360px] sm:w-64 sm:h-96 bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-6 shadow-2xl border-2 border-red-500 flex flex-col items-center justify-center text-center">
-        <div className="text-6xl mb-4">💀</div>
+      <motion.div
+        className="w-56 h-[360px] sm:w-64 sm:h-96 bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-6 shadow-2xl border-2 border-red-500 flex flex-col items-center justify-center text-center"
+        initial={{ x: 0 }}
+        animate={{
+          x: [0, -8, 8, -6, 6, -4, 4, 0],
+          opacity: [1, 0.7, 1],
+          boxShadow: [
+            '0 0 0px rgba(0,0,0,0)',
+            '0 0 40px rgba(139,26,26,0.9)',
+            '0 0 18px rgba(0,0,0,0.5)',
+          ],
+        }}
+        transition={{ duration: 0.6, ease: 'easeInOut' }}
+      >
+        <motion.div
+          className="text-6xl mb-4"
+          animate={{ scale: [1, 1.2, 0.95, 1], rotate: [0, -10, 10, 0] }}
+          transition={{ duration: 0.6, ease: 'easeInOut' }}
+        >
+          💀
+        </motion.div>
         <h2 className="text-3xl font-bold text-white">REVÉS</h2>
         <p className="text-red-100 mt-2">Derrota automática!</p>
-      </div>
+      </motion.div>
     )
   }
 

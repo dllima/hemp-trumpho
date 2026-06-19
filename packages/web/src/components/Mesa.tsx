@@ -77,8 +77,26 @@ export function Mesa() {
     resultadoPendente.vencedorId === jogadorIA?.id ? (ehUltimaRodada ? '💀 Oponente venceu o jogo!' : '😞 Oponente venceu a rodada!') :
     '🤝 Empate! Cartas vão para o monte'
 
+  // Detecta carta especial revelada nesta rodada (para os efeitos de clímax).
+  const especialRevelada = !revelado ? null
+    : (cartaHumano?.tipo === 'vantagem' || cartaIA?.tipo === 'vantagem') ? 'vantagem'
+    : (cartaHumano?.tipo === 'reves' || cartaIA?.tipo === 'reves') ? 'reves'
+    : null
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-hemp-dark to-black p-4 md:p-8">
+      {/* EFEITOS DE CLÍMAX (carta especial) */}
+      {especialRevelada === 'vantagem' && <Confetti />}
+      {especialRevelada === 'reves' && (
+        <motion.div
+          className="fixed inset-0 pointer-events-none z-20"
+          style={{ background: 'radial-gradient(circle, rgba(139,26,26,0.5) 0%, rgba(0,0,0,0.8) 100%)' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.85, 0] }}
+          transition={{ duration: 0.75, ease: 'easeInOut' }}
+        />
+      )}
+
       {/* HEADER */}
       <div className="flex flex-col lg:flex-row justify-between items-center mb-6 max-w-4xl mx-auto gap-3">
         <h1 className="text-2xl font-bold text-hemp-gold">🌿 Hemp Trumpho</h1>
