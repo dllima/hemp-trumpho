@@ -87,6 +87,13 @@ export function Mesa() {
     : (cartaHumano?.tipo === 'reves' || cartaIA?.tipo === 'reves') ? 'reves'
     : null
 
+  // Placar de rodadas vencidas, derivado do histórico (POV do humano).
+  const vitoriasHumano = historicoRodadas.filter(r => r.resultado === 'vitoria').length
+  const vitoriasOponente = historicoRodadas.filter(r => r.resultado === 'derrota').length
+  const empates = historicoRodadas.filter(r => r.resultado === 'empate').length
+  const humanoLidera = vitoriasHumano > vitoriasOponente
+  const oponenteLidera = vitoriasOponente > vitoriasHumano
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-hemp-dark to-black p-4 md:p-8">
       {/* EFEITOS DE CLÍMAX (carta especial) */}
@@ -192,6 +199,34 @@ export function Mesa() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* PLACAR DE RODADAS */}
+      <div className="max-w-2xl mx-auto mb-6 flex items-center justify-center gap-3 sm:gap-4 bg-hemp-dark/80 border border-hemp-gold/20 rounded-xl p-3">
+        <span className="flex items-center gap-1 font-bold text-green-400 text-sm sm:text-base">🌿 Você</span>
+        <motion.span
+          key={`vh-${vitoriasHumano}`}
+          initial={{ scale: 1.5 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+          className={`text-2xl font-extrabold ${humanoLidera ? 'text-hemp-gold' : 'text-gray-300'}`}
+        >
+          {vitoriasHumano}
+        </motion.span>
+        <span className="text-gray-500 font-bold">×</span>
+        <motion.span
+          key={`vo-${vitoriasOponente}`}
+          initial={{ scale: 1.5 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+          className={`text-2xl font-extrabold ${oponenteLidera ? 'text-hemp-gold' : 'text-gray-300'}`}
+        >
+          {vitoriasOponente}
+        </motion.span>
+        <span className="flex items-center gap-1 font-bold text-red-400 text-sm sm:text-base">Oponente 🤖</span>
+        {empates > 0 && (
+          <span className="text-xs text-gray-500 ml-1">· {empates} empate{empates > 1 ? 's' : ''}</span>
+        )}
       </div>
 
       {/* INFO */}
