@@ -1,26 +1,7 @@
 import { motion } from 'framer-motion'
 import type { Carta as CartaType, CartaGenetica, Atributo } from '@hemp-trunfo/engine'
 import { CartaVerso } from './CartaVerso'
-
-const icones: Record<Atributo, string> = {
-  thc: '🍃', cbd: '🍃', relaxamento: '🧘', foco: '👁️', 
-  felicidade: '😊', fome: '🍴', sono: '😴'
-}
-
-const nomes: Record<Atributo, string> = {
-  thc: 'THC', cbd: 'CBD', relaxamento: 'RELAXAMENTO', foco: 'FOCO',
-  felicidade: 'FELICIDADE', fome: 'FOME', sono: 'SONO'
-}
-
-const coresAtributo: Record<Atributo, string> = {
-  thc: 'text-green-400',
-  cbd: 'text-blue-400',
-  relaxamento: 'text-purple-400',
-  foco: 'text-cyan-400',
-  felicidade: 'text-yellow-400',
-  fome: 'text-red-400',
-  sono: 'text-indigo-400'
-}
+import { icones, nomes, coresAtributo } from '../utils/atributos'
 
 interface Props {
   carta: CartaType
