@@ -17,6 +17,7 @@ export function Mesa() {
   const historicoRodadas = useJogoStore(s => s.historicoRodadas)
   const iniciarPartida = useJogoStore(s => s.iniciarPartida)
   const modo = useJogoStore(s => s.modo)
+  const [mostrarRegras, setMostrarRegras] = useState(false)
 
   const revelado = !!resultadoPendente
   const cartaHumanoEspecial = !!cartaHumano && (cartaHumano.tipo === 'vantagem' || cartaHumano.tipo === 'reves')
@@ -31,24 +32,45 @@ export function Mesa() {
 
   if (!partida) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-hemp-dark to-black">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-hemp-dark to-black py-8">
         <div className="text-center px-4">
-          <motion.h1 className="text-5xl md:text-6xl font-bold text-hemp-gold mb-4" initial={{opacity:0, y:-20}} animate={{opacity:1, y:0}}>
+          <motion.img
+            src="/logo-hemp-trumpho.png"
+            alt="Hemp Trumpho"
+            className="w-32 sm:w-40 md:w-48 h-auto mx-auto mb-4 drop-shadow-2xl"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          />
+          <motion.h1 className="text-4xl md:text-5xl font-bold text-hemp-gold mb-2"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}>
             🌿 Hemp Trumpho
           </motion.h1>
-          <p className="text-gray-400 mb-2 text-lg">O jogo de cartas das genéticas</p>
-          <p className="text-gray-500 mb-8 text-sm">28 genéticas · 7 atributos · 1 vencedor</p>
-          <p className="text-hemp-gold font-semibold mb-3 text-sm uppercase tracking-wide">Escolha o modo</p>
+          <motion.p className="text-gray-400 mb-1 text-lg"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}>
+            O jogo de cartas das genéticas
+          </motion.p>
+          <motion.p className="text-gray-500 mb-6 text-sm"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }}>
+            28 genéticas · 7 atributos · 1 vencedor
+          </motion.p>
+          <motion.p className="text-hemp-gold font-semibold mb-3 text-sm uppercase tracking-wide"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.4 }}>
+            Escolha o modo
+          </motion.p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {([
-              { m: 'rapido', label: '⚡ Rápido', sub: '5 cartas' },
-              { m: 'medio', label: '🎯 Médio', sub: '10 cartas' },
-              { m: 'completo', label: '🏆 Completo', sub: '15 cartas' },
-            ] as const).map(({ m, label, sub }) => (
+              { m: 'rapido', label: '⚡ Rápido', sub: '5 cartas · partida curta' },
+              { m: 'medio', label: '🎯 Médio', sub: '10 cartas · partida equilibrada' },
+              { m: 'completo', label: '🏆 Completo', sub: '15 cartas · partida longa' },
+            ] as const).map(({ m, label, sub }, i) => (
               <motion.button
                 key={m}
                 onClick={() => iniciarPartida(['Você', 'Oponente'], m)}
                 className="px-6 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl font-bold text-white transition-all shadow-lg flex flex-col items-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1, duration: 0.4 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -57,9 +79,41 @@ export function Mesa() {
               </motion.button>
             ))}
           </div>
-          <div className="mt-12 flex justify-center gap-3 text-2xl">
+
+          <motion.button
+            onClick={() => setMostrarRegras(v => !v)}
+            className="mt-6 text-sm text-hemp-gold/90 hover:text-hemp-gold underline underline-offset-4"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.4 }}
+          >
+            📖 Como jogar
+          </motion.button>
+
+          <AnimatePresence initial={false}>
+            {mostrarRegras && (
+              <motion.div
+                className="mt-4 max-w-md mx-auto text-left bg-hemp-green/15 border border-hemp-gold/40 rounded-xl p-4 text-sm text-gray-200 space-y-2 overflow-hidden"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <p><strong className="text-hemp-gold">Objetivo:</strong> ganhe todas as cartas do oponente comparando atributos.</p>
+                <p><strong className="text-yellow-300">VANTAGEM:</strong> sorte! vence a partida imediatamente.</p>
+                <p><strong className="text-red-400">REVÉS:</strong> cuidado! perde a partida imediatamente.</p>
+                <p><strong className="text-hemp-gold">Modos:</strong> Rápido = partida curta · Médio = equilibrada · Completo = longa.</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <motion.p className="mt-8 text-xs text-gray-600"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.4 }}>
+            Baseado no baralho físico Hemp Trumpho · www.radiohemp.com
+          </motion.p>
+
+          <motion.div className="mt-6 flex justify-center gap-3 text-2xl"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.4 }}>
             <span>🍃</span><span>🧘</span><span>👁️</span><span>😊</span><span>🍴</span><span>😴</span>
-          </div>
+          </motion.div>
         </div>
       </div>
     )
