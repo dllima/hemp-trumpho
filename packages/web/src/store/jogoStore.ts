@@ -21,9 +21,20 @@ interface ResultadoPendente {
   proximoEstado: EstadoPartida
 }
 
+// Registro estruturado de uma rodada já jogada (do ponto de vista do jogador humano).
+export interface HistoricoRodada {
+  rodada: number
+  jogadorId: string // quem escolheu o atributo nesta rodada
+  atributo: Atributo
+  cartas: { jogador: string; oponente: string }
+  valores: { jogador: number; oponente: number }
+  resultado: 'vitoria' | 'derrota' | 'empate'
+}
+
 interface JogoState {
   partida: EstadoPartida | null
   resultadoPendente: ResultadoPendente | null
+  historicoRodadas: HistoricoRodada[]
   iniciarPartida: (nomes: string[]) => void
   jogarAtributo: (atributo: Atributo) => void
   avancarRodada: () => void
@@ -34,10 +45,11 @@ interface JogoState {
 export const useJogoStore = create<JogoState>((set, get) => ({
   partida: null,
   resultadoPendente: null,
+  historicoRodadas: [],
 
   iniciarPartida: (nomes) => {
     const partida = criarPartida(nomes, baralhoCompleto)
-    set({ partida, resultadoPendente: null })
+    set({ partida, resultadoPendente: null, historicoRodadas: [] })
   },
 
   jogarAtributo: (atributo) => {
@@ -93,13 +105,30 @@ export const useJogoStore = create<JogoState>((set, get) => ({
     const resultado = compararRodada(jogadoresAtivos, atributo, partida.monteEmpate)
     const proximoEstado = escolherAtributo(partida, atributo)
 
+    // Registro estruturado da rodada (POV do humano = jogadores[0]).
+    const idHumano = partida.jogadores[0].id
+    const idOponente = partida.jogadores[1]?.id
+    const detHumano = resultado.detalhes.find(d => d.jogadorId === idHumano)
+    const detOponente = resultado.detalhes.find(d => d.jogadorId === idOponente)
+    const entrada: HistoricoRodada | null = detHumano && detOponente ? {
+      rodada: partida.rodada,
+      jogadorId: jogadorAtual.id,
+      atributo,
+      cartas: { jogador: detHumano.carta.nome, oponente: detOponente.carta.nome },
+      valores: { jogador: detHumano.valor as number, oponente: detOponente.valor as number },
+      resultado: resultado.vencedor === idHumano ? 'vitoria'
+        : resultado.vencedor === idOponente ? 'derrota'
+        : 'empate'
+    } : null
+
     set({
       resultadoPendente: {
         atributo,
         vencedorId: resultado.vencedor,
         mensagem: resultado.mensagem,
         proximoEstado
-      }
+      },
+      historicoRodadas: entrada ? [...get().historicoRodadas, entrada] : get().historicoRodadas
     })
   },
 

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { usePartida } from '../hooks/usePartida'
 import { useIA } from '../hooks/useIA'
+import { useJogoStore } from '../store/jogoStore'
 import { CartaVisual } from './Carta'
+import { icones, nomes, coresAtributo } from '../utils/atributos'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export function Mesa() {
@@ -11,6 +13,8 @@ export function Mesa() {
   } = usePartida()
 
   useIA(1500)
+
+  const historicoRodadas = useJogoStore(s => s.historicoRodadas)
 
   const revelado = !!resultadoPendente
   const cartaHumanoEspecial = !!cartaHumano && (cartaHumano.tipo === 'vantagem' || cartaHumano.tipo === 'reves')
@@ -205,14 +209,41 @@ export function Mesa() {
       {/* HISTÓRICO */}
       <div className="max-w-2xl mx-auto bg-hemp-dark/80 border border-hemp-gold/20 rounded-xl p-4">
         <h3 className="text-hemp-gold font-bold mb-3 text-sm uppercase">📜 Histórico</h3>
-        <div className="space-y-2 text-sm max-h-40 overflow-y-auto">
-          <AnimatePresence>
-            {partida.historico.slice(-6).map((h: string, i: number) => (
-              <motion.p key={`${h}-${i}`} className="text-gray-300 border-l-2 border-hemp-gold/30 pl-3"
-                initial={{opacity:0, x:-20}} animate={{opacity:1, x:0}} transition={{delay:i*0.05}}>
-                {h}
-              </motion.p>
-            ))}
+        <div className="space-y-2 max-h-48 overflow-y-auto">
+          {historicoRodadas.length === 0 && (
+            <p className="text-xs text-gray-500 italic">Nenhuma rodada jogada ainda.</p>
+          )}
+          <AnimatePresence initial={false}>
+            {historicoRodadas.slice(-6).map((r, i) => {
+              const quemJogou = r.jogadorId === jogadorHumano?.id ? 'Você' : 'Oponente'
+              const cor = r.resultado === 'vitoria' ? 'text-green-400 border-green-400/50'
+                : r.resultado === 'derrota' ? 'text-red-400 border-red-400/50'
+                : 'text-gray-400 border-gray-400/40'
+              const label = r.resultado === 'vitoria' ? 'Você venceu'
+                : r.resultado === 'derrota' ? 'Oponente venceu'
+                : 'Empate'
+              return (
+                <motion.div
+                  key={`rodada-${r.rodada}`}
+                  className={`border-l-2 pl-3 py-1 ${cor}`}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ delay: i * 0.04 }}
+                >
+                  <div className="flex items-center justify-between gap-2 text-xs">
+                    <span className="text-gray-400">Rodada {r.rodada} · {quemJogou} jogou</span>
+                    <span className={`flex items-center gap-1 font-semibold ${coresAtributo[r.atributo]}`}>
+                      <span>{icones[r.atributo]}</span>{nomes[r.atributo]}
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-300">
+                    {r.cartas.jogador} · <strong className="text-white">{r.valores.jogador}</strong> vs <strong className="text-white">{r.valores.oponente}</strong> · {r.cartas.oponente}
+                  </div>
+                  <div className="text-xs font-bold">{label}</div>
+                </motion.div>
+              )
+            })}
           </AnimatePresence>
         </div>
       </div>
