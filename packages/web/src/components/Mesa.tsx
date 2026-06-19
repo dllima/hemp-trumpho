@@ -94,6 +94,14 @@ export function Mesa() {
   const humanoLidera = vitoriasHumano > vitoriasOponente
   const oponenteLidera = vitoriasOponente > vitoriasHumano
 
+  // Proporção de cartas no baralho (humano · monte · oponente), derivada de cartas.length.
+  const cartasHumano = jogadorHumano?.cartas.length ?? 0
+  const cartasOponente = jogadorIA?.cartas.length ?? 0
+  const monte = partida.monteEmpate.length
+  const pctHumano = total ? (cartasHumano / total) * 100 : 0
+  const pctMonte = total ? (monte / total) * 100 : 0
+  const pctOponente = total ? (cartasOponente / total) * 100 : 0
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-hemp-dark to-black p-4 md:p-8">
       {/* EFEITOS DE CLÍMAX (carta especial) */}
@@ -128,7 +136,7 @@ export function Mesa() {
         <div className="flex flex-col items-center order-1">
           <div className="mb-3 text-center">
             <p className="font-bold text-hemp-gold text-lg">{jogadorHumano?.nome}</p>
-            <p className="text-sm text-gray-400">{jogadorHumano?.cartas.length} cartas</p>
+            <p className="text-sm text-gray-400">🃏 {jogadorHumano?.cartas.length} cartas</p>
           </div>
           <div className="relative">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-hemp-gold text-black text-xs font-bold px-3 py-1 rounded-full z-10">
@@ -183,7 +191,7 @@ export function Mesa() {
         <div className="flex flex-col items-center order-3">
           <div className="mb-3 text-center">
             <p className="font-bold text-gray-400 text-lg">{jogadorIA?.nome}</p>
-            <p className="text-sm text-gray-500">{jogadorIA?.cartas.length} cartas</p>
+            <p className="text-sm text-gray-500">🃏 {jogadorIA?.cartas.length} cartas</p>
           </div>
           <div className="relative">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-600 text-white text-xs font-bold px-3 py-1 rounded-full z-10">
@@ -227,6 +235,20 @@ export function Mesa() {
         {empates > 0 && (
           <span className="text-xs text-gray-500 ml-1">· {empates} empate{empates > 1 ? 's' : ''}</span>
         )}
+      </div>
+
+      {/* BARRA DE CARTAS (proporção do baralho) */}
+      <div className="max-w-2xl mx-auto mb-6">
+        <div className="flex justify-between items-center text-xs mb-1.5">
+          <span className="text-green-400 font-semibold">🃏 Você · {cartasHumano}</span>
+          {monte > 0 && <span className="text-hemp-gold">Monte · {monte}</span>}
+          <span className="text-red-400 font-semibold">{cartasOponente} · Oponente 🃏</span>
+        </div>
+        <div className="flex h-3 w-full rounded-full overflow-hidden bg-hemp-dark/60 border border-hemp-gold/20">
+          <motion.div className="bg-green-500 h-full" animate={{ width: `${pctHumano}%` }} transition={{ type: 'spring', stiffness: 120, damping: 20 }} />
+          <motion.div className="bg-hemp-gold h-full" animate={{ width: `${pctMonte}%` }} transition={{ type: 'spring', stiffness: 120, damping: 20 }} />
+          <motion.div className="bg-red-500 h-full" animate={{ width: `${pctOponente}%` }} transition={{ type: 'spring', stiffness: 120, damping: 20 }} />
+        </div>
       </div>
 
       {/* INFO */}
