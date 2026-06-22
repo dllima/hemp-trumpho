@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Carta as CartaType, CartaGenetica, Atributo } from '@hemp-trunfo/engine'
 import { CartaVerso } from './CartaVerso'
@@ -10,9 +11,27 @@ interface Props {
   podeEscolher?: boolean
   ehMinhaVez?: boolean
   atributoSelecionado?: Atributo | null
+  /** Caminho da foto da strain (ex.: "/cartas/fotos/A1.webp"). Sem isso, mostra placeholder. */
+  foto?: string
 }
 
-export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVez, atributoSelecionado }: Props) {
+// Ícone do atributo: usa o SVG em /cartas/icones/<attr>.svg quando existir,
+// e cai no emoji se o arquivo ainda não foi criado (onError).
+function IconeAtributo({ attr }: { attr: Atributo }) {
+  const [semSvg, setSemSvg] = useState(false)
+  if (semSvg) return <span>{icones[attr]}</span>
+  return (
+    <img
+      src={`/cartas/icones/${attr}.svg`}
+      alt=""
+      aria-hidden
+      className="w-4 h-4 inline-block"
+      onError={() => setSemSvg(true)}
+    />
+  )
+}
+
+export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVez, atributoSelecionado, foto }: Props) {
 
   // Cartas especiais (vantagem/revés) só são reveladas quando `virada` é true.
   // Enquanto não viradas mostram o verso, igual às genéticas — assim a carta
@@ -93,9 +112,18 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
             <span className="text-xs bg-hemp-purple px-2 py-1 rounded text-white">{g.banco}</span>
           </div>
 
-          <div className="h-16 bg-hemp-dark/80 rounded-xl mb-2 flex items-center justify-center text-4xl">
-            🌿
-          </div>
+          {/* Foto da strain — placeholder verde enquanto o asset não existe */}
+          {foto ? (
+            <img
+              src={foto}
+              alt={g.nome}
+              className="w-full h-24 sm:h-32 object-cover rounded-xl mb-2"
+            />
+          ) : (
+            <div className="h-24 sm:h-32 bg-gradient-to-br from-hemp-green to-hemp-dark rounded-xl mb-2 flex items-center justify-center text-4xl">
+              🌿
+            </div>
+          )}
 
           <h3 className="text-hemp-gold font-bold text-sm mb-1">{g.nome}</h3>
           <p className="text-xs text-gray-300 mb-2 line-clamp-2">{g.descricao}</p>
@@ -116,7 +144,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
                 `}
               >
                 <span className={`flex items-center gap-1 ${coresAtributo[attr]}`}>
-                  <span>{icones[attr]}</span>
+                  <IconeAtributo attr={attr} />
                   <span className="uppercase">{nomes[attr]}</span>
                 </span>
                 <span className="font-bold text-hemp-gold">
