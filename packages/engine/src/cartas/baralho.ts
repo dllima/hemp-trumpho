@@ -2,181 +2,180 @@ import type { Carta } from '../types.js';
 
 export const baralhoCompleto: Carta[] = [
   {
-    id: 'A1', nome: 'Clockwork Orange', banco: 'Crazy Seeds',
-    descricao: 'Homenagem ao clássico time holandês de 1972. Terpenos cítricos, cheiro forte de laranja.',
+    id: 'A1', nome: "Clockwork Orange", banco: "Crazy Seeds",
+    descricao: "Seu nome é em homenagem ao clássico time da seleção holandesa de 1972. Terpenos cítricos, cheiro forte de laranja e com produção elevada de resina.",
     thc: 21, cbd: 0.03, relaxamento: 25, foco: 91, felicidade: 41, fome: 59, sono: 20,
     tipo: 'genetica'
   },
   {
-    id: 'A2', nome: 'Monkey Fever', banco: 'Crazy Seeds',
-    descricao: 'A "Febre do Macaco" tem sabor de uva passa. Genética 100% Indica, Afghan com Gorilla.',
+    id: 'A2', nome: "Monkey Fever", banco: "Crazy Seeds",
+    descricao: "A 'Febre do Macaco', tem um sabor curioso que lembra uva passa. Sua genética 100% Indica, de uma mistura de Afghan com Gorilla. Suas folhas podem ficar pretas.",
     thc: 21, cbd: 0.04, relaxamento: 94, foco: 47, felicidade: 63, fome: 81, sono: 100,
     tipo: 'genetica'
   },
   {
-    id: 'A3', nome: 'Stinky Fat', banco: 'Crazy Seeds',
-    descricao: 'Cheiro de queijo azedo. Flores densas, ótima para amarração.',
+    id: 'A3', nome: "Stinky Fat", banco: "Crazy Seeds",
+    descricao: "Quando você sente o cheiro, parece queijo azedo. Suas flores são densas e seus galhos possuem muitas ramificações. Ótima para técnicas de amarração.",
     thc: 25, cbd: 0.11, relaxamento: 57, foco: 69, felicidade: 90, fome: 77, sono: 55,
     tipo: 'genetica'
   },
   {
-    id: 'A4', nome: 'Crazy Haze', banco: 'Crazy Seeds',
-    descricao: 'Cepa pegajosa. Nome significa "Névoa Maluca", flores podem ficar roxas.',
+    id: 'A4', nome: "Crazy Haze", banco: "Crazy Seeds",
+    descricao: "Anos de cruzas deixaram essa cepa pegajosa, que não faz tossir mas deixa um sabor picante. O nome significa 'Névoa Maluca' e suas flores podem ficar roxas.",
     thc: 21, cbd: 0.01, relaxamento: 100, foco: 27, felicidade: 75, fome: 84, sono: 93,
     tipo: 'genetica'
   },
   {
-    id: 'A5', nome: 'Black Harpia', banco: 'Crazy Seeds',
-    descricao: 'Genética brasileira com flores pretas. Nome faz jus ao "Gavião Real".',
+    id: 'A5', nome: "Black Harpia", banco: "Crazy Seeds",
+    descricao: "Genética brasileira conhecida por suas flores pretas. O seu nome faz jus ao 'Gavião Real', a maior ave de rapina do mundo e nativa da América Latina.",
     thc: 26, cbd: 0.03, relaxamento: 70, foco: 63, felicidade: 71, fome: 55, sono: 70,
     tipo: 'genetica'
   },
   {
-    id: 'A6', nome: 'Purple Dream', banco: 'Crazy Seeds',
-    descricao: 'Flores roxas intensas. Relaxante profundo com toques criativos.',
-    thc: 24, cbd: 0.05, relaxamento: 88, foco: 45, felicidade: 82, fome: 70, sono: 85,
+    id: 'A6', nome: "Sucreme", banco: "Crazy Seeds",
+    descricao: "Planta de alto rendimento. Não se ramifica tanto, mas sua resina se transforma facilmente em creme nas mãos de quem faz uma boa extração.",
+    thc: 21, cbd: 0.07, relaxamento: 70, foco: 30, felicidade: 90, fome: 100, sono: 100,
     tipo: 'genetica'
   },
   {
-    id: 'A7', nome: 'Green Goblin', banco: 'Crazy Seeds',
-    descricao: 'Energia explosiva e foco laser. Para tarefas criativas.',
-    thc: 23, cbd: 0.02, relaxamento: 15, foco: 95, felicidade: 78, fome: 65, sono: 10,
+    id: 'A7', nome: "50/50", banco: "Crazy Seeds",
+    descricao: "Mistura norte-americana e holandesa com aroma cítrico e fresco, lembrando morangos. Seu nome faz referência por ser uma Híbrida com 50% Indica e 50% Sativa.",
+    thc: 23, cbd: 0.05, relaxamento: 50, foco: 50, felicidade: 50, fome: 50, sono: 50,
     tipo: 'genetica'
   },
   {
-    id: 'A8', nome: 'Golden Kush', banco: 'Crazy Seeds',
-    descricao: 'Tricomas dourados. Sabor terroso com notas cítricas.',
-    thc: 22, cbd: 0.08, relaxamento: 65, foco: 55, felicidade: 70, fome: 90, sono: 60,
+    id: 'A8', nome: "T.N.T", banco: "Crazy Seeds",
+    descricao: "Seus terpenos terrosos são uma bomba de sabor. Conta com cálices largos e folhas pequenas, não precisando de muitas podas em seu cultivo.",
+    thc: 23, cbd: 0.03, relaxamento: 20, foco: 38, felicidade: 29, fome: 77, sono: 65,
     tipo: 'genetica'
   },
   {
-    id: 'A9', nome: 'Silver Haze', banco: 'Crazy Seeds',
-    descricao: 'Tricomas prateados. Efeito cerebral energético.',
-    thc: 20, cbd: 0.04, relaxamento: 40, foco: 85, felicidade: 75, fome: 50, sono: 30,
+    id: 'A9', nome: "Krumble Juice", banco: "Crazy Seeds",
+    descricao: "Híbrida com predominância Indica que não oferece um rendimento tão grande em flores. Porém sua resina é bastante densa, uma excelente opção para extrações.",
+    thc: 24, cbd: 0.07, relaxamento: 83, foco: 41, felicidade: 72, fome: 78, sono: 80,
     tipo: 'genetica'
   },
   {
-    id: 'A10', nome: 'Red Dragon', banco: 'Crazy Seeds',
-    descricao: 'Flores avermelhadas, aroma picante. Potência elevada.',
-    thc: 28, cbd: 0.01, relaxamento: 80, foco: 35, felicidade: 85, fome: 95, sono: 75,
+    id: 'A10', nome: "Color Party", banco: "Crazy Seeds",
+    descricao: "Proveniente de um cruzamento entre Purples, essa é uma planta multicolor. Suas flores e folhas ficam pretas ou verdes, muitas vezes as duas no mesmo pé.",
+    thc: 25.5, cbd: 0.03, relaxamento: 96, foco: 43, felicidade: 94, fome: 61, sono: 78,
     tipo: 'genetica'
   },
   {
-    id: 'A11', nome: 'Blueberry Kush', banco: 'Crazy Seeds',
-    descricao: 'Sabor de mirtilo, relaxante corporal intenso.',
-    thc: 19, cbd: 0.06, relaxamento: 92, foco: 30, felicidade: 88, fome: 85, sono: 90,
+    id: 'A11', nome: "Tropikali", banco: "Crazy Seeds",
+    descricao: "Uma homenagem a um grande ativista da cena canábica brasileira. A Tropikali possui aroma, sabor tropical e resulta quase sempre em flores roxas.",
+    thc: 22, cbd: 0.1, relaxamento: 70, foco: 64, felicidade: 70, fome: 83, sono: 40,
     tipo: 'genetica'
   },
   {
-    id: 'A12', nome: 'White Widow', banco: 'Crazy Seeds',
-    descricao: 'Tricomas brancos como neve. Equilíbrio corpo e mente.',
-    thc: 20, cbd: 0.03, relaxamento: 60, foco: 72, felicidade: 80, fome: 60, sono: 45,
+    id: 'A12', nome: "Hulk Lemonade", banco: "Crazy Seeds",
+    descricao: "Planta 100% Sativa de um tom verde claro e sabor de limão. O nome diz tudo. Suas mudas são resistentes, suas sementes são grandes e as flores muito resinadas.",
+    thc: 27, cbd: 0, relaxamento: 0, foco: 100, felicidade: 50, fome: 50, sono: 0,
     tipo: 'genetica'
   },
   {
-    id: 'A13', nome: 'Northern Lights', banco: 'Crazy Seeds',
-    descricao: 'Lendas dizem que veio das estrelas. Sabor doce, sedativo.',
-    thc: 18, cbd: 0.02, relaxamento: 95, foco: 20, felicidade: 70, fome: 80, sono: 95,
+    id: 'B1', nome: "Mokum's Tulip", banco: "Crazy Seeds",
+    descricao: "Buds densos, perfume de caramelo e cores que vão do roxo ao azulado. Essa planta é uma verdadeira maravilha da natureza.",
+    thc: 19, cbd: 0.01, relaxamento: 75, foco: 80, felicidade: 90, fome: 75, sono: 68,
     tipo: 'genetica'
   },
   {
-    id: 'A14', nome: 'Sour Diesel', banco: 'Crazy Seeds',
-    descricao: 'Aroma de combustível cítrico. Efeito cerebral energético.',
-    thc: 22, cbd: 0.01, relaxamento: 30, foco: 90, felicidade: 85, fome: 45, sono: 15,
+    id: 'B2', nome: "Auto Lemon Kix", banco: "Crazy Seeds",
+    descricao: "Com flores que facilmente atingem o tamanho de bolas de tênis, essa genética carrega a herança de uma Las Vegas Lemon Skunk.",
+    thc: 23, cbd: 0.05, relaxamento: 60, foco: 80, felicidade: 100, fome: 60, sono: 55,
     tipo: 'genetica'
   },
   {
-    id: 'A15', nome: 'OG Kush', banco: 'Crazy Seeds',
-    descricao: 'Clássico da Costa Oeste. Limão, pinho e especiarias.',
-    thc: 24, cbd: 0.04, relaxamento: 75, foco: 50, felicidade: 72, fome: 88, sono: 65,
+    id: 'B3', nome: "Kerosene Krash", banco: "Crazy Seeds",
+    descricao: "Considerada uma queridinha das extrações pela alta quantidade de resina, essa planta tem um cheiro tão forte que parece querosene (uma delícia).",
+    thc: 19, cbd: 0.01, relaxamento: 75, foco: 80, felicidade: 90, fome: 75, sono: 68,
     tipo: 'genetica'
   },
   {
-    id: 'A16', nome: 'Amnesia Haze', banco: 'Crazy Seeds',
-    descricao: 'Premiada, sabor cítrico e floral. Efeito cerebral intenso.',
-    thc: 23, cbd: 0.02, relaxamento: 35, foco: 88, felicidade: 90, fome: 55, sono: 25,
+    id: 'C1', nome: "Carolina Dream", banco: "Crazy Seeds",
+    descricao: "Genética forte no CBD. Produz bastante extrato para fabricação de óleo e a magia dos terpenos pode garantir o cheiro de chocolate, pinho ou óleo diesel.",
+    thc: 0.3, cbd: 18, relaxamento: 90, foco: 89, felicidade: 84, fome: 86, sono: 60,
     tipo: 'genetica'
   },
   {
-    id: 'A17', nome: 'Granddaddy Purple', banco: 'Crazy Seeds',
-    descricao: 'Flores roxas profundas, aroma de uva. Relaxante poderoso.',
-    thc: 17, cbd: 0.05, relaxamento: 98, foco: 15, felicidade: 65, fome: 92, sono: 100,
+    id: 'C2', nome: "Golden Redwood", banco: "Crazy Seeds",
+    descricao: "Predominantemente Sativa e com sabor de tangerina, é conhecida por proporcionar uma sensação geral de bem estar, deixando no ar uma fome controlada.",
+    thc: 0.3, cbd: 21, relaxamento: 92, foco: 92, felicidade: 83, fome: 73, sono: 50,
     tipo: 'genetica'
   },
   {
-    id: 'A18', nome: 'Jack Herer', banco: 'Crazy Seeds',
-    descricao: 'Homenagem ao ativista. Pinho cítrico, criatividade e clareza.',
-    thc: 21, cbd: 0.03, relaxamento: 45, foco: 93, felicidade: 87, fome: 50, sono: 20,
+    id: 'C3', nome: "Wild Bourbon", banco: "Crazy Seeds",
+    descricao: "Daquelas genéticas que ficam roxas com a chegada do inverno. A combinação de terpenos deixa um cheiro amadeirado, com toques de ameixa, maçã e carvalho.",
+    thc: 0.3, cbd: 18, relaxamento: 87, foco: 100, felicidade: 96, fome: 64, sono: 30,
     tipo: 'genetica'
   },
   {
-    id: 'A19', nome: 'Girl Scout Cookies', banco: 'Crazy Seeds',
-    descricao: 'Doce de menta e chocolate. Equilibrado com toque de euforia.',
-    thc: 25, cbd: 0.02, relaxamento: 70, foco: 60, felicidade: 92, fome: 85, sono: 55,
+    id: 'D1', nome: "Jack Orange", banco: "Crazy Seeds",
+    descricao: "Com seu cheirinho de laranja é ótima para combater a enxaqueca. Genética Híbrida, nascida de uma cruza entre Black Kush 98 com a famosa Jack Herer.",
+    thc: 23, cbd: 1, relaxamento: 52, foco: 92, felicidade: 100, fome: 85, sono: 53,
     tipo: 'genetica'
   },
   {
-    id: 'A20', nome: 'Gorilla Glue', banco: 'Crazy Seeds',
-    descricao: 'Tricomas pegajosos. Potência extrema, efeito pesado.',
-    thc: 27, cbd: 0.01, relaxamento: 85, foco: 25, felicidade: 75, fome: 90, sono: 80,
+    id: 'E1', nome: "AK-47", banco: "Crazy Seeds",
+    descricao: "Uma das genéticas mais populares da história e não é à toa. Tem esse nome pois segundo as lendas 'faz a cabeça com um hit só'.",
+    thc: 20, cbd: 2, relaxamento: 95, foco: 52, felicidade: 82, fome: 80, sono: 40,
     tipo: 'genetica'
   },
   {
-    id: 'A21', nome: 'Pineapple Express', banco: 'Crazy Seeds',
-    descricao: 'Sabor tropical de abacaxi. Efeito energético e alegre.',
-    thc: 20, cbd: 0.04, relaxamento: 50, foco: 80, felicidade: 95, fome: 70, sono: 30,
+    id: 'E2', nome: "Skunk #1", banco: "Crazy Seeds",
+    descricao: "A lendária Skunk #1 é usada até hoje para dar origem a outras genéticas. Graças a essa planta que o nome 'skunk' sempre é relacionado a qualquer ganja potente.",
+    thc: 20, cbd: 2, relaxamento: 95, foco: 52, felicidade: 82, fome: 80, sono: 40,
     tipo: 'genetica'
   },
   {
-    id: 'A22', nome: 'AK-47', banco: 'Crazy Seeds',
-    descricao: 'Híbrida equilibrada, sabor terroso e floral. Social e criativa.',
-    thc: 19, cbd: 0.03, relaxamento: 55, foco: 75, felicidade: 80, fome: 65, sono: 40,
+    id: 'E3', nome: "Pineapple Express", banco: "Crazy Seeds",
+    descricao: "Planta híbrida que pode ser cultivada dentro e fora de casa. O efeito intenso da Pineapple Express fez tanto sucesso que já foi até tema de filme.",
+    thc: 17, cbd: 0.6, relaxamento: 90, foco: 55, felicidade: 90, fome: 74, sono: 45,
     tipo: 'genetica'
   },
   {
-    id: 'A23', nome: 'Chemdawg', banco: 'Crazy Seeds',
-    descricao: 'Aroma químico único. Efeito cerebral intenso e misterioso.',
-    thc: 24, cbd: 0.01, relaxamento: 40, foco: 85, felicidade: 70, fome: 60, sono: 35,
+    id: 'E4', nome: "Buddah Cheese", banco: "Crazy Seeds",
+    descricao: "Predominante Indica, com flores gordas e terpenos intensos que fazem lembrar queijo, tanto no cheiro quanto no sabor. Seu efeito faz o usuário meditar.",
+    thc: 16, cbd: 0.2, relaxamento: 98, foco: 91, felicidade: 60, fome: 87, sono: 77,
     tipo: 'genetica'
   },
   {
-    id: 'A24', nome: 'Mango Kush', banco: 'Crazy Seeds',
-    descricao: 'Sabor doce de manga tropical. Relaxante e feliz.',
-    thc: 18, cbd: 0.06, relaxamento: 78, foco: 40, felicidade: 88, fome: 95, sono: 70,
+    id: 'E5', nome: "White Widow", banco: "Crazy Seeds",
+    descricao: "Originada de uma mistura entre a brasileira Manga Rosa e uma genética do sul da Índia, a White Widow é, há mais de vinte anos, uma das favoritas dos jardineiros.",
+    thc: 18, cbd: 1, relaxamento: 86, foco: 83, felicidade: 88, fome: 90, sono: 48,
     tipo: 'genetica'
   },
   {
-    id: 'A25', nome: 'Lemon Haze', banco: 'Crazy Seeds',
-    descricao: 'Sabor cítrico fresco de limão. Cerebral claro e energético.',
-    thc: 21, cbd: 0.03, relaxamento: 30, foco: 92, felicidade: 86, fome: 55, sono: 20,
+    id: 'E6', nome: "Sour Diesel", banco: "Crazy Seeds",
+    descricao: "Também conhecida como 'Sour D', é uma genética Sativa originária da cruza entre a Chemdawg e a Super Skunk. O efeito é rápido e sim, o cheiro é de óleo diesel.",
+    thc: 25, cbd: 0.3, relaxamento: 93, foco: 89, felicidade: 95, fome: 80, sono: 57,
     tipo: 'genetica'
   },
   {
-    id: 'A26', nome: 'Bubble Gum', banco: 'Crazy Seeds',
-    descricao: 'Sabor doce de chiclete rosa. Feliz e descontraído.',
-    thc: 17, cbd: 0.04, relaxamento: 62, foco: 55, felicidade: 93, fome: 75, sono: 50,
+    id: 'E7', nome: "Blue Dream", banco: "Crazy Seeds",
+    descricao: "Uma genética Híbrida com predominância Sativa. Essa planta produz um efeito balanceado que estimula o cérebro e o completo relaxamento do corpo.",
+    thc: 20, cbd: 0.2, relaxamento: 99, foco: 70, felicidade: 92, fome: 40, sono: 66,
     tipo: 'genetica'
   },
   {
-    id: 'A27', nome: 'Strawberry Cough', banco: 'Crazy Seeds',
-    descricao: 'Sabor doce de morango. Cerebral sociável.',
-    thc: 19, cbd: 0.02, relaxamento: 42, foco: 78, felicidade: 89, fome: 58, sono: 28,
+    id: 'F1', nome: "Manga Rosa", banco: "Crazy Seeds",
+    descricao: "A genética mais famosa do Brasil é conhecida por seu aroma adocicado e sabor frutado. Ótimos efeitos sedativos para o uso noturno e momentos de descanso.",
+    thc: 16, cbd: 0.01, relaxamento: 85, foco: 70, felicidade: 99, fome: 87, sono: 90,
     tipo: 'genetica'
   },
   {
-    id: 'A28', nome: 'Durban Poison', banco: 'Crazy Seeds',
-    descricao: 'Landrace da África do Sul. Anis, energético puro.',
-    thc: 22, cbd: 0.01, relaxamento: 20, foco: 96, felicidade: 84, fome: 40, sono: 12,
+    id: 'F2', nome: "Cabrobó", banco: "Crazy Seeds",
+    descricao: "A Cabrobó é uma planta que cresce rápido. Cultivada ao ar livre devido à boa adaptação ao clima da região do 'Polígono da Maconha', no Nordeste brasileiro.",
+    thc: 14, cbd: 0.02, relaxamento: 83, foco: 68, felicidade: 86, fome: 99, sono: 70,
     tipo: 'genetica'
   },
   {
-    id: 'VANTAGEM', nome: 'Vantagem', tipo: 'vantagem', efeito: 'vence_automatico'
+    id: 'VANTAGEM', nome: "VANTAGEM", tipo: 'vantagem',
+    efeito: "Sorte! Você venceu essa rodada."
   },
   {
-    id: 'REVES', nome: 'Revés', tipo: 'reves', efeito: 'perde_automatico'
-  },
-  {
-    id: 'INFO', nome: 'Breve História da Cannabis', tipo: 'informativa', efeito: 'informativa'
+    id: 'REVÉS', nome: "REVÉS", tipo: 'reves',
+    efeito: "Ih! Ferrou! Essa plantinha mofou. Você perdeu essa rodada."
   }
 ];
 

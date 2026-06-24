@@ -1,25 +1,8 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Carta as CartaType, CartaGenetica, Atributo } from '@hemp-trunfo/engine'
-
-const icones: Record<Atributo, string> = {
-  thc: '🍃', cbd: '🍃', relaxamento: '🧘', foco: '👁️', 
-  felicidade: '😊', fome: '🍴', sono: '😴'
-}
-
-const nomes: Record<Atributo, string> = {
-  thc: 'THC', cbd: 'CBD', relaxamento: 'RELAXAMENTO', foco: 'FOCO',
-  felicidade: 'FELICIDADE', fome: 'FOME', sono: 'SONO'
-}
-
-const coresAtributo: Record<Atributo, string> = {
-  thc: 'text-green-400',
-  cbd: 'text-blue-400',
-  relaxamento: 'text-purple-400',
-  foco: 'text-cyan-400',
-  felicidade: 'text-yellow-400',
-  fome: 'text-red-400',
-  sono: 'text-indigo-400'
-}
+import { CartaVerso } from './CartaVerso'
+import { icones, nomes, coresAtributo } from '../utils/atributos'
 
 interface Props {
   carta: CartaType
@@ -28,32 +11,94 @@ interface Props {
   podeEscolher?: boolean
   ehMinhaVez?: boolean
   atributoSelecionado?: Atributo | null
+  /** Caminho da foto da strain (ex.: "/cartas/fotos/A1.webp"). Sem isso, mostra placeholder. */
+  foto?: string
 }
 
-export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVez, atributoSelecionado }: Props) {
+// Ícone do atributo: usa o SVG em /cartas/icones/<attr>.svg quando existir,
+// e cai no emoji se o arquivo ainda não foi criado (onError).
+function IconeAtributo({ attr }: { attr: Atributo }) {
+  const [semSvg, setSemSvg] = useState(false)
+  return (
+    // Círculo dourado de fundo (#f7d515) com o ícone branco centralizado.
+    <span className="w-6 h-6 shrink-0 rounded-full bg-[#f7d515] flex items-center justify-center">
+      {semSvg ? (
+        <span className="text-xs leading-none">{icones[attr]}</span>
+      ) : (
+        <img
+          src={`/cartas/icones/${attr}.svg`}
+          alt=""
+          aria-hidden
+          // Cor original do SVG (#003d38) — contrasta com o círculo dourado.
+          className="w-4 h-4"
+          onError={() => setSemSvg(true)}
+        />
+      )}
+    </span>
+  )
+}
+
+export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVez, atributoSelecionado, foto }: Props) {
 
   // Cartas especiais (vantagem/revés) só são reveladas quando `virada` é true.
   // Enquanto não viradas mostram o verso, igual às genéticas — assim a carta
   // especial do oponente só aparece no momento da revelação da rodada.
   if (carta.tipo === 'vantagem' || carta.tipo === 'reves') {
     if (!virada) {
-      return <CartaVerso ehMinhaVez={ehMinhaVez} />
+      return <CartaVerso tamanho="normal" />
     }
     if (carta.tipo === 'vantagem') {
       return (
-        <div className="w-64 h-96 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-2xl p-6 shadow-2xl border-2 border-yellow-300 flex flex-col items-center justify-center text-center">
-          <div className="text-6xl mb-4">⭐</div>
+        <motion.div
+          className="w-56 h-[360px] sm:w-64 sm:h-96 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-700 rounded-2xl p-6 shadow-2xl border-2 border-yellow-300 flex flex-col items-center justify-center text-center"
+          initial={{ scale: 0.6 }}
+          animate={{
+            scale: [0.6, 1.15, 1],
+            boxShadow: [
+              '0 0 0px rgba(234,179,8,0)',
+              '0 0 40px rgba(234,179,8,0.85)',
+              '0 0 24px rgba(234,179,8,0.6)',
+            ],
+          }}
+          transition={{ duration: 0.7, times: [0, 0.6, 1], ease: 'easeOut' }}
+        >
+          <motion.div
+            className="text-6xl mb-4"
+            animate={{ scale: [1, 1.3, 1], rotate: [0, 12, -12, 0] }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            ⭐
+          </motion.div>
           <h2 className="text-3xl font-bold text-white">VANTAGEM</h2>
-          <p className="text-yellow-100 mt-2">Vitória automática!</p>
-        </div>
+          <p className="text-yellow-100 mt-2">Vence a rodada!</p>
+        </motion.div>
       )
     }
     return (
-      <div className="w-64 h-96 bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-6 shadow-2xl border-2 border-red-500 flex flex-col items-center justify-center text-center">
-        <div className="text-6xl mb-4">💀</div>
+      <motion.div
+        className="w-56 h-[360px] sm:w-64 sm:h-96 bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-6 shadow-2xl border-2 border-red-500 flex flex-col items-center justify-center text-center"
+        initial={{ x: 0 }}
+        animate={{
+          x: [0, -8, 8, -6, 6, -4, 4, 0],
+          opacity: [1, 0.7, 1],
+          boxShadow: [
+            '0 0 0px rgba(0,0,0,0)',
+            '0 0 40px rgba(139,26,26,0.9)',
+            '0 0 18px rgba(0,0,0,0.5)',
+          ],
+        }}
+        transition={{ duration: 0.6, ease: 'easeInOut' }}
+      >
+        <motion.div
+          className="text-6xl mb-4"
+          animate={{ scale: [1, 1.2, 0.95, 1], rotate: [0, -10, 10, 0] }}
+          transition={{ duration: 0.6, ease: 'easeInOut' }}
+        >
+          💀
+        </motion.div>
         <h2 className="text-3xl font-bold text-white">REVÉS</h2>
-        <p className="text-red-100 mt-2">Derrota automática!</p>
-      </div>
+        <p className="text-red-100 mt-2">Perde a rodada!</p>
+      </motion.div>
     )
   }
 
@@ -61,22 +106,43 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
   const attrs: Atributo[] = ['thc', 'cbd', 'relaxamento', 'foco', 'felicidade', 'fome', 'sono']
 
   return (
-    <div className={`relative w-64 h-96 perspective-1000 ${ehMinhaVez ? 'animate-pulse-gold' : ''}`}>
+    <div className={`relative w-56 h-[360px] sm:w-64 sm:h-96 perspective-1000 ${ehMinhaVez ? 'animate-pulse-gold' : ''}`}>
       <motion.div 
         className="w-full h-full relative preserve-3d"
         animate={{ rotateY: virada ? 0 : 180 }}
         transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
       >
         {/* FRENTE */}
-        <div className={`absolute inset-0 backface-hidden bg-gradient-to-br from-hemp-green to-hemp-dark rounded-2xl p-4 shadow-2xl border-2 flex flex-col ${ehMinhaVez ? 'border-hemp-gold' : 'border-hemp-gold/30'}`}>
+        <div
+          className={`absolute inset-0 backface-hidden rounded-2xl p-4 shadow-2xl border-2 flex flex-col ${ehMinhaVez ? 'border-hemp-gold' : 'border-hemp-gold/30'}`}
+          // Camadas (topo→base): overlay verde p/ legibilidade do texto, pattern
+          // da carta e, por fim, o gradiente verde — fallback caso o pattern 404.
+          style={{
+            backgroundImage:
+              "linear-gradient(to bottom right, rgba(26,60,26,0.6), rgba(26,60,26,0.72)), " +
+              "url('/cartas/bg/pattern.webp'), " +
+              "linear-gradient(to bottom right, #2d5a2d, #1a3c1a)",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
           <div className="flex justify-between items-start mb-2">
             <span className="text-hemp-gold font-bold">{g.id}</span>
             <span className="text-xs bg-hemp-purple px-2 py-1 rounded text-white">{g.banco}</span>
           </div>
 
-          <div className="h-16 bg-hemp-dark/80 rounded-xl mb-2 flex items-center justify-center text-4xl">
-            🌿
-          </div>
+          {/* Foto da strain — placeholder verde enquanto o asset não existe */}
+          {foto ? (
+            <img
+              src={foto}
+              alt={g.nome}
+              className="w-full h-24 sm:h-32 object-cover rounded-xl mb-2"
+            />
+          ) : (
+            <div className="h-24 sm:h-32 bg-gradient-to-br from-hemp-green to-hemp-dark rounded-xl mb-2 flex items-center justify-center text-4xl">
+              🌿
+            </div>
+          )}
 
           <h3 className="text-hemp-gold font-bold text-sm mb-1">{g.nome}</h3>
           <p className="text-xs text-gray-300 mb-2 line-clamp-2">{g.descricao}</p>
@@ -88,7 +154,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
                 onClick={() => podeEscolher && onEscolher?.(attr)}
                 disabled={!podeEscolher}
                 className={`
-                  flex justify-between items-center px-2 py-1 rounded text-xs transition-all
+                  flex justify-between items-center px-2 py-2 md:py-1 rounded text-sm md:text-xs transition-all
                   ${podeEscolher 
                     ? 'hover:bg-hemp-light cursor-pointer bg-hemp-dark/60 hover:scale-105' 
                     : 'cursor-default bg-hemp-dark/30 opacity-50'
@@ -96,8 +162,8 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
                   ${atributoSelecionado === attr ? 'ring-2 ring-hemp-gold bg-hemp-gold/20' : ''}
                 `}
               >
-                <span className={`flex items-center gap-1 ${coresAtributo[attr]}`}>
-                  <span>{icones[attr]}</span>
+                <span className={`flex items-center gap-2 ${coresAtributo[attr]}`}>
+                  <IconeAtributo attr={attr} />
                   <span className="uppercase">{nomes[attr]}</span>
                 </span>
                 <span className="font-bold text-hemp-gold">
@@ -109,30 +175,10 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
         </div>
 
         {/* VERSO */}
-        <div 
-          className="absolute inset-0 backface-hidden rounded-2xl bg-gradient-to-br from-hemp-purple to-black flex items-center justify-center border-2 border-hemp-gold/40"
-          style={{ transform: 'rotateY(180deg)' }}
-        >
-          <div className="text-center">
-            <div className="text-7xl mb-4">🌿</div>
-            <p className="text-hemp-gold font-bold text-xl tracking-widest">HEMP</p>
-            <p className="text-hemp-gold font-bold text-xl tracking-widest">TRUMPHO</p>
-          </div>
+        <div className="absolute inset-0 backface-hidden" style={{ transform: 'rotateY(180deg)' }}>
+          <CartaVerso tamanho="normal" />
         </div>
       </motion.div>
-    </div>
-  )
-}
-
-// Verso da carta (face para baixo), reutilizado pelas cartas especiais ainda não reveladas.
-function CartaVerso({ ehMinhaVez }: { ehMinhaVez?: boolean }) {
-  return (
-    <div className={`w-64 h-96 rounded-2xl bg-gradient-to-br from-hemp-purple to-black flex items-center justify-center border-2 shadow-2xl ${ehMinhaVez ? 'border-hemp-gold' : 'border-hemp-gold/40'}`}>
-      <div className="text-center">
-        <div className="text-7xl mb-4">🌿</div>
-        <p className="text-hemp-gold font-bold text-xl tracking-widest">HEMP</p>
-        <p className="text-hemp-gold font-bold text-xl tracking-widest">TRUMPHO</p>
-      </div>
     </div>
   )
 }
