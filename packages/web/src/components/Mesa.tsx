@@ -22,8 +22,8 @@ export function Mesa() {
   const revelado = !!resultadoPendente
   const cartaHumanoEspecial = !!cartaHumano && (cartaHumano.tipo === 'vantagem' || cartaHumano.tipo === 'reves')
 
-  // Carta especial do próprio jogador joga sozinha (não há atributo a escolher).
-  // O resultado encerra a partida e o jogador clica em "Ver Resultado Final".
+  // Carta especial do próprio jogador joga sozinha (não há atributo a escolher):
+  // resolve a rodada automaticamente (VANTAGEM vence, REVÉS perde) e o jogo segue.
   useEffect(() => {
     if (!ehMinhaVez || revelado || !cartaHumanoEspecial) return
     const t = setTimeout(() => jogar('thc'), 1100)
@@ -98,8 +98,8 @@ export function Mesa() {
                 transition={{ duration: 0.3 }}
               >
                 <p><strong className="text-hemp-gold">Objetivo:</strong> ganhe todas as cartas do oponente comparando atributos.</p>
-                <p><strong className="text-yellow-300">VANTAGEM:</strong> sorte! vence a partida imediatamente.</p>
-                <p><strong className="text-red-400">REVÉS:</strong> cuidado! perde a partida imediatamente.</p>
+                <p><strong className="text-yellow-300">VANTAGEM:</strong> sorte! vence a rodada na hora.</p>
+                <p><strong className="text-red-400">REVÉS:</strong> cuidado! perde a rodada na hora.</p>
                 <p><strong className="text-hemp-gold">Modos:</strong> Rápido = partida curta · Médio = equilibrada · Completo = longa.</p>
               </motion.div>
             )}

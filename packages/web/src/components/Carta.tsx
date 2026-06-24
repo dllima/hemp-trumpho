@@ -70,7 +70,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
             ⭐
           </motion.div>
           <h2 className="text-3xl font-bold text-white">VANTAGEM</h2>
-          <p className="text-yellow-100 mt-2">Vitória automática!</p>
+          <p className="text-yellow-100 mt-2">Vence a rodada!</p>
         </motion.div>
       )
     }
@@ -97,7 +97,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
           💀
         </motion.div>
         <h2 className="text-3xl font-bold text-white">REVÉS</h2>
-        <p className="text-red-100 mt-2">Derrota automática!</p>
+        <p className="text-red-100 mt-2">Perde a rodada!</p>
       </motion.div>
     )
   }

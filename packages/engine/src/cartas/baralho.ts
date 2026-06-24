@@ -171,11 +171,11 @@ export const baralhoCompleto: Carta[] = [
   },
   {
     id: 'VANTAGEM', nome: "VANTAGEM", tipo: 'vantagem',
-    efeito: "Sorte! Você venceu essa partida."
+    efeito: "Sorte! Você venceu essa rodada."
   },
   {
     id: 'REVÉS', nome: "REVÉS", tipo: 'reves',
-    efeito: "Ih! Ferrou! Essa querida plantinha mofou. Você perdeu essa partida."
+    efeito: "Ih! Ferrou! Você perdeu essa rodada."
   }
 ];
 

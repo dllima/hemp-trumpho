@@ -69,47 +69,10 @@ export const useJogoStore = create<JogoState>((set, get) => ({
 
     const jogadoresAtivos = partida.jogadores.filter(j => j.cartas.length > 0)
 
-    // Carta especial (vantagem/revés) de qualquer jogador ENCERRA a partida:
-    // quem tirou VANTAGEM vence o jogo; quem tirou REVÉS perde (o oponente vence).
-    const vantagem = jogadoresAtivos.find(j => j.cartas[0].tipo === 'vantagem')
-    const reves = jogadoresAtivos.find(j => j.cartas[0].tipo === 'reves')
-
-    if (vantagem || reves) {
-      let vencedorId: string
-      let mensagem: string
-
-      const idHumano = partida.jogadores[0].id
-
-      if (vantagem) {
-        vencedorId = vantagem.id
-        const quem = vantagem.id === idHumano ? 'Você' : 'Oponente'
-        mensagem = `${quem} tirou VANTAGEM e venceu a partida!`
-      } else {
-        const outro = jogadoresAtivos.find(j => j.id !== reves!.id)
-        vencedorId = outro ? outro.id : reves!.id
-        const quem = reves!.id === idHumano ? 'Você' : 'Oponente'
-        mensagem = `${quem} tirou REVÉS e perdeu a partida!`
-      }
-
-      const vencedorNome = partida.jogadores.find(j => j.id === vencedorId)?.nome ?? ''
-      const estadoFinal: EstadoPartida = {
-        ...partida,
-        vencedor: vencedorId,
-        finalizada: true,
-        historico: [
-          ...partida.historico,
-          `Rodada ${partida.rodada}: ${mensagem}`,
-          `🏆 ${vencedorNome} venceu a partida!`
-        ]
-      }
-
-      set({
-        resultadoPendente: { atributo, vencedorId, mensagem, proximoEstado: estadoFinal }
-      })
-      return
-    }
-
-    // Rodada normal (genéticas): fluxo de duas fases com o botão "Próxima Rodada".
+    // Resolve a rodada. Cartas especiais (VANTAGEM/REVÉS) são tratadas pela
+    // engine como fim de RODADA, não de partida: VANTAGEM vence a rodada e
+    // REVÉS a perde (o oponente leva a carta). A partida só finaliza quando um
+    // jogador fica com todas as cartas — esse critério vive em escolherAtributo.
     const resultado = compararRodada(jogadoresAtivos, atributo, partida.monteEmpate)
     const proximoEstado = escolherAtributo(partida, atributo)
 
