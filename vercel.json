@@ -3,5 +3,4 @@
   "framework": "vite",
   "installCommand": "npm install",
   "buildCommand": "npm run build:engine && npm run build",
-  "outputDirectory": "packages/web/dist"
-}
+  "outputDirectory": "dist"}
