@@ -25,7 +25,9 @@ function IconeAtributo({ attr }: { attr: Atributo }) {
       src={`/cartas/icones/${attr}.svg`}
       alt=""
       aria-hidden
-      className="w-4 h-4 inline-block"
+      className="w-5 h-5 inline-block shrink-0"
+      // SVGs têm fill escuro (#003d38); clareia p/ contrastar com o fundo escuro.
+      style={{ filter: 'brightness(0) invert(1)' }}
       onError={() => setSemSvg(true)}
     />
   )
@@ -106,7 +108,19 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
         transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
       >
         {/* FRENTE */}
-        <div className={`absolute inset-0 backface-hidden bg-gradient-to-br from-hemp-green to-hemp-dark rounded-2xl p-4 shadow-2xl border-2 flex flex-col ${ehMinhaVez ? 'border-hemp-gold' : 'border-hemp-gold/30'}`}>
+        <div
+          className={`absolute inset-0 backface-hidden rounded-2xl p-4 shadow-2xl border-2 flex flex-col ${ehMinhaVez ? 'border-hemp-gold' : 'border-hemp-gold/30'}`}
+          // Camadas (topo→base): overlay verde p/ legibilidade do texto, pattern
+          // da carta e, por fim, o gradiente verde — fallback caso o pattern 404.
+          style={{
+            backgroundImage:
+              "linear-gradient(to bottom right, rgba(26,60,26,0.6), rgba(26,60,26,0.72)), " +
+              "url('/cartas/bg/pattern.webp'), " +
+              "linear-gradient(to bottom right, #2d5a2d, #1a3c1a)",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
           <div className="flex justify-between items-start mb-2">
             <span className="text-hemp-gold font-bold">{g.id}</span>
             <span className="text-xs bg-hemp-purple px-2 py-1 rounded text-white">{g.banco}</span>
@@ -143,7 +157,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
                   ${atributoSelecionado === attr ? 'ring-2 ring-hemp-gold bg-hemp-gold/20' : ''}
                 `}
               >
-                <span className={`flex items-center gap-1 ${coresAtributo[attr]}`}>
+                <span className={`flex items-center gap-1.5 ${coresAtributo[attr]}`}>
                   <IconeAtributo attr={attr} />
                   <span className="uppercase">{nomes[attr]}</span>
                 </span>
