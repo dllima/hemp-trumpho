@@ -29,9 +29,8 @@ function IconeAtributo({ attr }: { attr: Atributo }) {
           src={`/cartas/icones/${attr}.svg`}
           alt=""
           aria-hidden
+          // Cor original do SVG (#003d38) — contrasta com o círculo dourado.
           className="w-4 h-4"
-          // SVGs têm fill escuro (#003d38); clareia p/ ícone branco no círculo.
-          style={{ filter: 'brightness(0) invert(1)' }}
           onError={() => setSemSvg(true)}
         />
       )}
