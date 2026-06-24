@@ -19,17 +19,23 @@ interface Props {
 // e cai no emoji se o arquivo ainda não foi criado (onError).
 function IconeAtributo({ attr }: { attr: Atributo }) {
   const [semSvg, setSemSvg] = useState(false)
-  if (semSvg) return <span>{icones[attr]}</span>
   return (
-    <img
-      src={`/cartas/icones/${attr}.svg`}
-      alt=""
-      aria-hidden
-      className="w-5 h-5 inline-block shrink-0"
-      // SVGs têm fill escuro (#003d38); clareia p/ contrastar com o fundo escuro.
-      style={{ filter: 'brightness(0) invert(1)' }}
-      onError={() => setSemSvg(true)}
-    />
+    // Círculo dourado de fundo (#f7d515) com o ícone branco centralizado.
+    <span className="w-6 h-6 shrink-0 rounded-full bg-[#f7d515] flex items-center justify-center">
+      {semSvg ? (
+        <span className="text-xs leading-none">{icones[attr]}</span>
+      ) : (
+        <img
+          src={`/cartas/icones/${attr}.svg`}
+          alt=""
+          aria-hidden
+          className="w-4 h-4"
+          // SVGs têm fill escuro (#003d38); clareia p/ ícone branco no círculo.
+          style={{ filter: 'brightness(0) invert(1)' }}
+          onError={() => setSemSvg(true)}
+        />
+      )}
+    </span>
   )
 }
 
@@ -157,7 +163,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
                   ${atributoSelecionado === attr ? 'ring-2 ring-hemp-gold bg-hemp-gold/20' : ''}
                 `}
               >
-                <span className={`flex items-center gap-1.5 ${coresAtributo[attr]}`}>
+                <span className={`flex items-center gap-2 ${coresAtributo[attr]}`}>
                   <IconeAtributo attr={attr} />
                   <span className="uppercase">{nomes[attr]}</span>
                 </span>
