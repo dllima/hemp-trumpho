@@ -175,7 +175,7 @@ export const baralhoCompleto: Carta[] = [
   },
   {
     id: 'REVÉS', nome: "REVÉS", tipo: 'reves',
-    efeito: "Ih! Ferrou! Você perdeu essa rodada."
+    efeito: "Ih! Ferrou! Essa plantinha mofou. Você perdeu essa rodada."
   }
 ];
 

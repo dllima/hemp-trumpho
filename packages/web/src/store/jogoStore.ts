@@ -25,9 +25,11 @@ interface ResultadoPendente {
 export interface HistoricoRodada {
   rodada: number
   jogadorId: string // quem escolheu o atributo nesta rodada
-  atributo: Atributo
+  // 'ESPECIAL' quando a rodada foi decidida por carta VANTAGEM/REVÉS (sem atributo comparado).
+  atributo: Atributo | 'ESPECIAL'
   cartas: { jogador: string; oponente: string }
-  valores: { jogador: number; oponente: number }
+  // string ('CARTA ESPECIAL') nas rodadas especiais; número nas rodadas normais.
+  valores: { jogador: number | string; oponente: number | string }
   resultado: 'vitoria' | 'derrota' | 'empate'
 }
 
@@ -81,12 +83,18 @@ export const useJogoStore = create<JogoState>((set, get) => ({
     const idOponente = partida.jogadores[1]?.id
     const detHumano = resultado.detalhes.find(d => d.jogadorId === idHumano)
     const detOponente = resultado.detalhes.find(d => d.jogadorId === idOponente)
+    // Rodada decidida por carta especial (VANTAGEM/REVÉS): não há atributo
+    // comparado, então rotula como 'ESPECIAL' em vez do atributo sorteado e
+    // mostra "CARTA ESPECIAL" no lugar dos valores numéricos.
+    const rodadaEspecial = !!detHumano && !!detOponente && (detHumano.especial || detOponente.especial)
     const entrada: HistoricoRodada | null = detHumano && detOponente ? {
       rodada: partida.rodada,
       jogadorId: jogadorAtual.id,
-      atributo,
+      atributo: rodadaEspecial ? 'ESPECIAL' : atributo,
       cartas: { jogador: detHumano.carta.nome, oponente: detOponente.carta.nome },
-      valores: { jogador: detHumano.valor as number, oponente: detOponente.valor as number },
+      valores: rodadaEspecial
+        ? { jogador: 'CARTA ESPECIAL', oponente: 'CARTA ESPECIAL' }
+        : { jogador: detHumano.valor as number, oponente: detOponente.valor as number },
       resultado: resultado.vencedor === idHumano ? 'vitoria'
         : resultado.vencedor === idOponente ? 'derrota'
         : 'empate'

@@ -360,9 +360,15 @@ export function Mesa() {
                 >
                   <div className="flex items-center justify-between gap-2 text-xs">
                     <span className="text-gray-400">Rodada {r.rodada} · {quemJogou} jogou</span>
-                    <span className={`flex items-center gap-1 font-semibold ${coresAtributo[r.atributo]}`}>
-                      <span>{icones[r.atributo]}</span>{nomes[r.atributo]}
-                    </span>
+                    {r.atributo === 'ESPECIAL' ? (
+                      <span className="flex items-center gap-1 font-semibold text-hemp-gold">
+                        <span>⭐</span>ESPECIAL
+                      </span>
+                    ) : (
+                      <span className={`flex items-center gap-1 font-semibold ${coresAtributo[r.atributo]}`}>
+                        <span>{icones[r.atributo]}</span>{nomes[r.atributo]}
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs text-gray-300">
                     {r.cartas.jogador} · <strong className="text-white">{r.valores.jogador}</strong> vs <strong className="text-white">{r.valores.oponente}</strong> · {r.cartas.oponente}
