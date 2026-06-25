@@ -34,14 +34,7 @@ export function Mesa() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-hemp-dark to-black py-8">
         <div className="text-center px-4">
-          <motion.img
-            src="/logo-hemp-trumpho.png"
-            alt="Hemp Trumpho"
-            className="w-32 sm:w-40 md:w-48 h-auto mx-auto mb-4 drop-shadow-2xl"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          />
+          {/* Logo agora vive no Header fixo global (App.tsx); aqui fica só o título. */}
           <motion.h1 className="text-4xl md:text-5xl font-bold text-hemp-gold mb-2"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}>
             🌿 Hemp Trumpho
