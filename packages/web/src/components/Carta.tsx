@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import type { Carta as CartaType, CartaGenetica, Atributo } from '@hemp-trunfo/engine'
+import type { Carta as CartaType, CartaGenetica, Atributo } from '@hemp-trumpho/engine'
 import { CartaVerso } from './CartaVerso'
 import { icones, nomes } from '../utils/atributos'
 

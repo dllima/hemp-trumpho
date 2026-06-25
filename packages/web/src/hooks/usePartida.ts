@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useJogoStore } from '../store/jogoStore'
-import { type Atributo } from '@hemp-trunfo/engine'
+import { type Atributo } from '@hemp-trumpho/engine'
 
 export function usePartida() {
   const { partida, resultadoPendente, iniciarPartida, jogarAtributo, avancarRodada } = useJogoStore()

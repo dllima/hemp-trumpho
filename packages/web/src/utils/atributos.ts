@@ -1,4 +1,4 @@
-import type { Atributo } from '@hemp-trunfo/engine'
+import type { Atributo } from '@hemp-trumpho/engine'
 
 // Mapas de apresentação dos atributos das cartas (emoji, rótulo e cor Tailwind).
 // Compartilhados entre Carta.tsx e o histórico (Mesa.tsx).
