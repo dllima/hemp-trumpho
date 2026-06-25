@@ -1,5 +1,5 @@
 {
-  "name": "hemp-Trumpho",
+  "name": "hemp-trumpho",
   "version": "0.1.0",
   "private": true,
   "description": "Jogo de cartas estilo Super Trumpho baseado no baralho Hemp Trumpho",
@@ -8,9 +8,9 @@
     "packages/web"
   ],
   "scripts": {
-    "build:engine": "npm run build --workspace @hemp-trunfo/engine",
-    "dev": "npm run dev --workspace @hemp-Trumpho/web",
-    "build": "npm run build:engine && npm run build --workspace @hemp-Trumpho/web"
+    "build:engine": "npm run build --workspace @hemp-trumpho/engine",
+    "dev": "npm run dev --workspace @hemp-trumpho/web",
+    "build": "npm run build:engine && npm run build --workspace @hemp-trumpho/web"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.1"

@@ -9,7 +9,7 @@ import {
   type EstadoPartida,
   type Atributo,
   type Carta
-} from '@hemp-trunfo/engine'
+} from '@hemp-trumpho/engine'
 
 // Resolução de uma rodada que já foi calculada mas ainda NÃO foi aplicada à partida.
 // Isso permite revelar as cartas e o resultado antes de avançar para a próxima rodada,
