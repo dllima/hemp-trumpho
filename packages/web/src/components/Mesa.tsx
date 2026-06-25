@@ -223,6 +223,7 @@ export function Mesa() {
                 podeEscolher={ehMinhaVez && !revelado && !cartaHumanoEspecial}
                 ehMinhaVez={ehMinhaVez && !revelado}
                 atributoSelecionado={atributoSelecionado}
+                foto={cartaHumano.tipo === 'genetica' ? `/cartas/fotos/${cartaHumano.id.toLowerCase()}.webp` : undefined}
               />
             )}
           </div>
@@ -276,6 +277,7 @@ export function Mesa() {
                 virada={revelado}
                 podeEscolher={false}
                 atributoSelecionado={revelado ? atributoSelecionado : null}
+                foto={cartaIA.tipo === 'genetica' ? `/cartas/fotos/${cartaIA.id.toLowerCase()}.webp` : undefined}
               />
             )}
           </div>

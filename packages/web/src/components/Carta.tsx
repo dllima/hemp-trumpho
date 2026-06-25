@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import type { Carta as CartaType, CartaGenetica, Atributo } from '@hemp-trumpho/engine'
 import { CartaVerso } from './CartaVerso'
@@ -37,6 +37,15 @@ function IconeAtributo({ attr }: { attr: Atributo }) {
 }
 
 export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVez, atributoSelecionado, foto }: Props) {
+
+  // Fallback da foto da strain: webp → jpg → placeholder. Cada onError só
+  // AVANÇA a fase, nunca reaponta para um src que já falhou (evita loop).
+  // Declarado antes dos early returns das cartas especiais para respeitar as
+  // Rules of Hooks (a carta pode alternar entre especial e genética).
+  const [fotoFase, setFotoFase] = useState<'webp' | 'jpg' | 'erro'>('webp')
+  // A instância de CartaVisual é reusada entre rodadas; reseta a fase ao
+  // trocar de carta para não herdar um fallback de uma carta anterior.
+  useEffect(() => { setFotoFase('webp') }, [foto])
 
   // Cartas especiais (vantagem/revés) só são reveladas quando `virada` é true.
   if (carta.tipo === 'vantagem' || carta.tipo === 'reves') {
@@ -122,11 +131,13 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
         >
           {/* ÁREA SUPERIOR: Foto + Badges (~30% da altura) */}
           <div className="relative w-full h-[30%] shrink-0">
-            {foto ? (
+            {foto && fotoFase !== 'erro' ? (
               <img
-                src={foto}
+                // fase 'webp' usa o caminho recebido; 'jpg' troca a extensão.
+                src={fotoFase === 'webp' ? foto : foto.replace(/\.webp$/, '.jpg')}
                 alt={g.nome}
                 className="w-full h-full object-cover"
+                onError={() => setFotoFase(f => (f === 'webp' ? 'jpg' : 'erro'))}
               />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-[#1a5a1a] to-[#0a3a0a] flex items-center justify-center">
