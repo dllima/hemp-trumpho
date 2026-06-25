@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Carta as CartaType, CartaGenetica, Atributo } from '@hemp-trunfo/engine'
 import { CartaVerso } from './CartaVerso'
-import { icones, nomes, coresAtributo } from '../utils/atributos'
+import { icones, nomes } from '../utils/atributos'
 
 interface Props {
   carta: CartaType
@@ -20,17 +20,15 @@ interface Props {
 function IconeAtributo({ attr }: { attr: Atributo }) {
   const [semSvg, setSemSvg] = useState(false)
   return (
-    // Círculo dourado de fundo (#f7d515) com o ícone branco centralizado.
-    <span className="w-6 h-6 shrink-0 rounded-full bg-[#f7d515] flex items-center justify-center">
+    <span className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full bg-[#f7d515] flex items-center justify-center shadow-md">
       {semSvg ? (
-        <span className="text-xs leading-none">{icones[attr]}</span>
+        <span className="text-base leading-none">{icones[attr]}</span>
       ) : (
         <img
           src={`/cartas/icones/${attr}.svg`}
           alt=""
           aria-hidden
-          // Cor original do SVG (#003d38) — contrasta com o círculo dourado.
-          className="w-4 h-4"
+          className="w-5 h-5 sm:w-6 sm:h-6"
           onError={() => setSemSvg(true)}
         />
       )}
@@ -41,8 +39,6 @@ function IconeAtributo({ attr }: { attr: Atributo }) {
 export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVez, atributoSelecionado, foto }: Props) {
 
   // Cartas especiais (vantagem/revés) só são reveladas quando `virada` é true.
-  // Enquanto não viradas mostram o verso, igual às genéticas — assim a carta
-  // especial do oponente só aparece no momento da revelação da rodada.
   if (carta.tipo === 'vantagem' || carta.tipo === 'reves') {
     if (!virada) {
       return <CartaVerso tamanho="normal" />
@@ -50,7 +46,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
     if (carta.tipo === 'vantagem') {
       return (
         <motion.div
-          className="w-56 h-[360px] sm:w-64 sm:h-96 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-700 rounded-2xl p-6 shadow-2xl border-2 border-yellow-300 flex flex-col items-center justify-center text-center"
+          className="w-[240px] h-[400px] sm:w-[320px] sm:h-[540px] bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-700 rounded-2xl p-6 shadow-2xl border-2 border-yellow-300 flex flex-col items-center justify-center text-center"
           initial={{ scale: 0.6 }}
           animate={{
             scale: [0.6, 1.15, 1],
@@ -76,7 +72,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
     }
     return (
       <motion.div
-        className="w-56 h-[360px] sm:w-64 sm:h-96 bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-6 shadow-2xl border-2 border-red-500 flex flex-col items-center justify-center text-center"
+        className="w-[240px] h-[400px] sm:w-[320px] sm:h-[540px] bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-6 shadow-2xl border-2 border-red-500 flex flex-col items-center justify-center text-center"
         initial={{ x: 0 }}
         animate={{
           x: [0, -8, 8, -6, 6, -4, 4, 0],
@@ -106,69 +102,113 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
   const attrs: Atributo[] = ['thc', 'cbd', 'relaxamento', 'foco', 'felicidade', 'fome', 'sono']
 
   return (
-    <div className={`relative w-56 h-[360px] sm:w-64 sm:h-96 perspective-1000 ${ehMinhaVez ? 'animate-pulse-gold' : ''}`}>
+    <div className={`relative w-[240px] h-[400px] sm:w-[320px] sm:h-[540px] perspective-1000 ${ehMinhaVez ? 'animate-pulse-gold' : ''}`}>
       <motion.div 
         className="w-full h-full relative preserve-3d"
         animate={{ rotateY: virada ? 0 : 180 }}
         transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
       >
-        {/* FRENTE */}
+        {/* FRENTE — visual da carta física original */}
         <div
-          className={`absolute inset-0 backface-hidden rounded-2xl p-4 shadow-2xl border-2 flex flex-col ${ehMinhaVez ? 'border-hemp-gold' : 'border-hemp-gold/30'}`}
-          // Camadas (topo→base): overlay verde p/ legibilidade do texto, pattern
-          // da carta e, por fim, o gradiente verde — fallback caso o pattern 404.
+          className={`absolute inset-0 backface-hidden rounded-2xl shadow-2xl border-2 flex flex-col overflow-hidden ${ehMinhaVez ? 'border-[#f7d515]' : 'border-[#0a4d3c]'}`}
           style={{
             backgroundImage:
-              "linear-gradient(to bottom right, rgba(26,60,26,0.6), rgba(26,60,26,0.72)), " +
-              "url('/cartas/bg/pattern.webp'), " +
-              "linear-gradient(to bottom right, #2d5a2d, #1a3c1a)",
+              "linear-gradient(to bottom, rgba(10,77,60,0.85), rgba(10,77,60,0.95)), " +
+              "url('/cartas/bg/pattern.webp')",
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            backgroundColor: '#0a4d3c',
           }}
         >
-          <div className="flex justify-between items-start mb-2">
-            <span className="text-hemp-gold font-bold">{g.id}</span>
-            <span className="text-xs bg-hemp-purple px-2 py-1 rounded text-white">{g.banco}</span>
+          {/* ÁREA SUPERIOR: Foto + Badges (~30% da altura) */}
+          <div className="relative w-full h-[30%] shrink-0">
+            {foto ? (
+              <img
+                src={foto}
+                alt={g.nome}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-[#1a5a1a] to-[#0a3a0a] flex items-center justify-center">
+                <span className="text-5xl sm:text-6xl">🌿</span>
+              </div>
+            )}
+
+            {/* Badge código (canto superior esquerdo) */}
+            <div className="absolute top-2 left-2 bg-[#4ade80] text-[#0a4d3c] font-extrabold text-[10px] sm:text-xs px-2 py-1 rounded-lg shadow-lg">
+              {g.id}
+            </div>
+
+            {/* Badge banco (canto superior direito) */}
+            <div className="absolute top-2 right-2 bg-[#4ade80] text-[#0a4d3c] font-bold text-[9px] sm:text-[10px] px-2 py-1 rounded-lg shadow-lg">
+              {g.banco}
+            </div>
           </div>
 
-          {/* Foto da strain — placeholder verde enquanto o asset não existe */}
-          {foto ? (
-            <img
-              src={foto}
-              alt={g.nome}
-              className="w-full h-24 sm:h-32 object-cover rounded-xl mb-2"
-            />
-          ) : (
-            <div className="h-24 sm:h-32 bg-gradient-to-br from-hemp-green to-hemp-dark rounded-xl mb-2 flex items-center justify-center text-4xl">
-              🌿
-            </div>
-          )}
+          {/* ÁREA DO NOME */}
+          <div className="px-3 pt-2 pb-1 text-center shrink-0">
+            <h3 className="text-[#f7d515] font-black text-sm sm:text-base uppercase tracking-wide leading-tight">
+              {g.nome}
+            </h3>
+          </div>
 
-          <h3 className="text-hemp-gold font-bold text-sm mb-1">{g.nome}</h3>
-          <p className="text-xs text-gray-300 mb-2 line-clamp-2">{g.descricao}</p>
+          {/* DESCRIÇÃO */}
+          <div className="px-3 pb-2 text-center shrink-0">
+            <p className="text-[9px] sm:text-[10px] text-gray-300 leading-snug line-clamp-2">
+              {g.descricao}
+            </p>
+          </div>
 
-          <div className="flex-1 flex flex-col gap-1">
+          {/* ATRIBUTOS — linhas horizontais com contorno reforçado e hover glow */}
+          <div className="flex-1 flex flex-col gap-[4px] sm:gap-[6px] px-3 pb-3 overflow-hidden">
             {attrs.map(attr => (
               <button
                 key={attr}
                 onClick={() => podeEscolher && onEscolher?.(attr)}
                 disabled={!podeEscolher}
                 className={`
-                  flex justify-between items-center px-2 py-2 md:py-1 rounded text-sm md:text-xs transition-all
+                  group relative flex items-center h-8 sm:h-9 rounded-lg transition-all duration-300
+                  border-2 border-[#0a4d3c] shadow-sm
                   ${podeEscolher 
-                    ? 'hover:bg-hemp-light cursor-pointer bg-hemp-dark/60 hover:scale-105' 
-                    : 'cursor-default bg-hemp-dark/30 opacity-50'
+                    ? 'hover:scale-[1.05] hover:shadow-xl hover:border-[#f7d515] cursor-pointer hover:-translate-y-0.5' 
+                    : 'cursor-default opacity-80'
                   }
-                  ${atributoSelecionado === attr ? 'ring-2 ring-hemp-gold bg-hemp-gold/20' : ''}
+                  ${atributoSelecionado === attr ? 'ring-2 ring-[#f7d515] shadow-xl border-[#f7d515]' : 'bg-white/95'}
                 `}
               >
-                <span className={`flex items-center gap-2 ${coresAtributo[attr]}`}>
+                {/* Fundo branco da linha */}
+                <div className="absolute inset-0 bg-white/95 rounded-lg" />
+
+                {/* Efeito hover — glow dourado estático */}
+                <div className={`
+                  absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300
+                  ${podeEscolher ? 'group-hover:opacity-100' : ''}
+                  bg-[#f7d515]/20
+                `} />
+
+                {/* Ícone posicionado à esquerda */}
+                <div className="absolute -left-2 top-1/2 -translate-y-1/2 z-20">
                   <IconeAtributo attr={attr} />
-                  <span className="uppercase">{nomes[attr]}</span>
+                </div>
+
+                {/* Nome do atributo */}
+                <span className="relative z-10 font-bold text-[#0a4d3c] uppercase tracking-wide text-[10px] sm:text-[11px] ml-7 sm:ml-8">
+                  {nomes[attr]}
                 </span>
-                <span className="font-bold text-hemp-gold">
-                  {attr === 'thc' || attr === 'cbd' ? `${g[attr]}%` : g[attr]}
-                </span>
+
+                {/* VALOR — largura fixa, fundo escuro, letra clara */}
+                <div className={`
+                  relative z-10 ml-auto flex items-center justify-center
+                  h-full w-14 sm:w-16 rounded-r-md
+                  bg-[#0a4d3c] text-[#f7d515]
+                  ${atributoSelecionado === attr ? 'bg-[#0a4d3c]' : ''}
+                  ${podeEscolher ? 'group-hover:bg-[#06362a] group-hover:text-white group-hover:shadow-inner' : ''}
+                  transition-colors duration-300
+                `}>
+                  <span className="font-black text-xs sm:text-sm">
+                    {attr === 'thc' || attr === 'cbd' ? `${g[attr]}%` : g[attr]}
+                  </span>
+                </div>
               </button>
             ))}
           </div>

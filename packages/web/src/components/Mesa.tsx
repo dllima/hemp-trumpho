@@ -110,9 +110,19 @@ export function Mesa() {
             Baseado no baralho físico Hemp Trumpho · www.radiohemp.com
           </motion.p>
 
-          <motion.div className="mt-6 flex justify-center gap-3 text-2xl"
+          <motion.div className="mt-6 flex justify-center gap-3"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.4 }}>
-            <span>🍃</span><span>🧘</span><span>👁️</span><span>😊</span><span>🍴</span><span>😴</span>
+            {(['thc', 'relaxamento', 'foco', 'felicidade', 'fome', 'sono'] as const).map(attr => (
+              <img
+                key={attr}
+                src={`/cartas/icones/${attr}.svg`}
+                alt=""
+                aria-hidden
+                // fill escuro do SVG (#003d38) clareado p/ contrastar no fundo escuro
+                className="w-7 h-7"
+                style={{ filter: 'brightness(0) invert(1)' }}
+              />
+            ))}
           </motion.div>
         </div>
       </div>
