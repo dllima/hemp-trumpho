@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@hemp-Trumpho/engine': path.resolve(__dirname, '../engine/dist/index.js'),
+      '@hemp-trumpho/engine': path.resolve(__dirname, '../engine/dist/index.js'),
     },
   },
 })
