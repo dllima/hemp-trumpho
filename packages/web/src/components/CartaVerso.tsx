@@ -10,7 +10,9 @@ interface CartaVersoProps {
 // de sol e logo PNG) — o mesmo do baralho físico.
 // Cores fora do tema vêm de inline styles (Tailwind v4 — sem tailwind.config.js).
 export function CartaVerso({ tamanho = 'normal' }: CartaVersoProps) {
-  const dimensao = tamanho === 'pequeno' ? 'w-56 h-[340px]' : 'w-56 h-[360px] sm:w-64 sm:h-96'
+  const dimensao = tamanho === 'pequeno' 
+    ? 'w-[200px] h-[320px]' 
+    : 'w-[240px] h-[400px] sm:w-[320px] sm:h-[540px]'
   const [semCostas, setSemCostas] = useState(false)
 
   return (
