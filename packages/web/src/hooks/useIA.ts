@@ -2,7 +2,7 @@ import { useEffect, useCallback } from 'react'
 import { useJogoStore } from '../store/jogoStore'
 import { type Atributo } from '@hemp-trumpho/engine'
 
-const ATRIBUTOS: Atributo[] = ['thc', 'relaxamento', 'foco', 'felicidade', 'fome', 'sono']
+const ATRIBUTOS: Atributo[] = ['thc', 'cbd', 'relaxamento', 'foco', 'felicidade', 'fome', 'sono']
 
 export function useIA(delayMs = 1500) {
   const { partida, resultadoPendente, jogarAtributo } = useJogoStore()
