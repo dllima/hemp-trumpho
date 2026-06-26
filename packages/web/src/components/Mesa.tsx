@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 export function Mesa() {
   const {
-    partida, resultadoPendente, iniciar, jogar, avancar,
+    partida, resultadoPendente, jogar, avancar,
     jogadorHumano, jogadorIA, ehMinhaVez, cartaHumano, cartaIA
   } = usePartida()
 
@@ -18,6 +18,7 @@ export function Mesa() {
   const historicoRodadas = useJogoStore(s => s.historicoRodadas)
   const iniciarPartida = useJogoStore(s => s.iniciarPartida)
   const modo = useJogoStore(s => s.modo)
+  const voltarInicio = useJogoStore(s => s.voltarInicio)
 
   const revelado = !!resultadoPendente
   const cartaHumanoEspecial = !!cartaHumano && (cartaHumano.tipo === 'vantagem' || cartaHumano.tipo === 'reves')
@@ -45,9 +46,14 @@ export function Mesa() {
           </motion.h1>
           <p className="text-3xl md:text-4xl mb-2">{v?.nome} venceu!</p>
           <p className="text-gray-400 mb-8">Rodadas: {partida.rodada - 1}</p>
-          <button onClick={() => iniciar(['Você', 'Oponente'])} className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold text-white transition-all hover:scale-105">
-            🔄 Jogar Novamente
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button onClick={() => iniciarPartida(['Você', 'Oponente'], modo)} className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold text-white transition-all hover:scale-105">
+              🔄 Jogar de novo
+            </button>
+            <button onClick={() => voltarInicio()} className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold text-white transition-all hover:scale-105">
+              🎮 Escolher modo
+            </button>
+          </div>
         </div>
       </div>
     )

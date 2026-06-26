@@ -48,6 +48,7 @@ interface JogoState {
   avancarRodada: () => void
   getCartaTopo: (jogadorId: string) => Carta | null
   podeJogar: (jogadorId: string) => boolean
+  voltarInicio: () => void
 }
 
 export const useJogoStore = create<JogoState>((set, get) => ({
@@ -128,5 +129,8 @@ export const useJogoStore = create<JogoState>((set, get) => ({
     const { partida, resultadoPendente } = get()
     if (!partida || resultadoPendente) return false
     return podeEscolherAtributo(partida, jogadorId)
-  }
+  },
+
+  // Zera a partida — a Mesa volta a renderizar a Home (tela de escolha de modo).
+  voltarInicio: () => set({ partida: null, resultadoPendente: null, historicoRodadas: [] })
 }))
