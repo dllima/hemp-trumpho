@@ -111,6 +111,9 @@ export function MesaMobile() {
               {humanoGen && (
                 <span className="absolute top-1 left-1 bg-[#4ade80] text-[#0a4d3c] font-extrabold text-[10px] px-1.5 py-0.5 rounded">{humanoGen.id}</span>
               )}
+              {humanoGen && (
+                <span className="absolute top-1 right-1 bg-[#4ade80] text-[#0a4d3c] font-bold text-[9px] px-1.5 py-0.5 rounded">{humanoGen.banco}</span>
+              )}
             </div>
             <div className="p-2 text-center">
               <p className="text-[#f7d515] font-bold text-xs leading-tight truncate">{cartaHumano?.nome}</p>
@@ -144,6 +147,9 @@ export function MesaMobile() {
                   : <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-yellow-500 to-red-700">{cartaIA?.tipo === 'vantagem' ? '⭐' : '💀'}</div>}
                 {iaGen && (
                   <span className="absolute top-1 left-1 bg-[#4ade80] text-[#0a4d3c] font-extrabold text-[10px] px-1.5 py-0.5 rounded">{iaGen.id}</span>
+                )}
+                {iaGen && (
+                  <span className="absolute top-1 right-1 bg-[#4ade80] text-[#0a4d3c] font-bold text-[9px] px-1.5 py-0.5 rounded">{iaGen.banco}</span>
                 )}
               </div>
               <div className="p-2">
