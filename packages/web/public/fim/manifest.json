@@ -1,0 +1,10 @@
+{
+  "vitoria": {
+    "fotos": ["placeholder.svg"],
+    "sons": ["placeholder.wav"]
+  },
+  "derrota": {
+    "fotos": ["placeholder.svg"],
+    "sons": ["placeholder.wav"]
+  }
+}
