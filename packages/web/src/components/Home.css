@@ -293,16 +293,63 @@ html {
 
 .card-preview {
   position: absolute;
-  width: 220px;
-  aspect-ratio: 0.68 / 1;
+  width: 190px;
   border-radius: 24px;
-  padding: 18px;
+  padding: 14px;
   background:
     linear-gradient(180deg, rgba(165,230,90,0.12), rgba(255,255,255,0.02)),
     linear-gradient(180deg, #173C24, #0D1E14);
   border: 1px solid rgba(165,230,90,0.18);
   box-shadow: 0 25px 45px rgba(0,0,0,0.4);
   overflow: hidden;
+}
+
+/* Área de foto da strain no topo do card (identidade visual). */
+.card-photo {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-photo-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  background: linear-gradient(180deg, #1a5a1a, #0a3a0a);
+}
+
+/* Badge do id no canto superior esquerdo da foto (só no card central). */
+.card-badge {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  left: 8px;
+  background: var(--accent);
+  color: #1B2209;
+  font-weight: 800;
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+/* Linha discreta de total abaixo dos stats amostrados. */
+.stat-total {
+  margin-top: 4px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted);
 }
 
 .card-preview::before {
@@ -318,57 +365,50 @@ html {
 .card-preview.main {
   z-index: 3;
   left: 50%;
-  top: 38px;
+  top: 10px;
+  width: 200px;
+  height: 400px;
   transform: translateX(-50%);
+}
+
+/* Laterais menores, empurradas para os lados + para baixo + com leve rotação,
+   de modo que as 3 fotos (no topo de cada card) apareçam no leque. */
+.card-preview.left,
+.card-preview.right {
+  width: 160px;
+  height: 300px;
+  opacity: 0.95;
+}
+
+.card-preview.left .card-photo,
+.card-preview.right .card-photo {
+  height: 100px;
 }
 
 .card-preview.left {
   z-index: 2;
-  left: 24px;
-  top: 110px;
-  transform: rotate(-12deg);
-  opacity: 0.92;
+  left: 0;
+  top: 80px;
+  transform: rotate(-10deg);
 }
 
 .card-preview.right {
   z-index: 1;
-  right: 24px;
-  top: 110px;
-  transform: rotate(12deg);
-  opacity: 0.92;
-}
-
-.card-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
-  padding: 8px 12px;
-  border-radius: 999px;
-  color: var(--primary-2);
-  font-size: 0.82rem;
-  font-weight: 700;
-  margin-bottom: 18px;
-}
-
-.card-name {
-  font-size: 1.55rem;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  margin-bottom: 8px;
+  right: 0;
+  top: 80px;
+  transform: rotate(10deg);
 }
 
 .card-type {
   color: var(--muted);
-  margin-bottom: 18px;
-  font-size: 0.95rem;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
 }
 
 .stats {
   display: grid;
-  gap: 10px;
-  margin-top: 18px;
+  gap: 8px;
+  margin-top: 0;
 }
 
 .stat {
@@ -378,8 +418,8 @@ html {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 14px;
-  padding: 10px 12px;
-  font-size: 0.92rem;
+  padding: 8px 10px;
+  font-size: 0.9rem;
 }
 
 .stat strong {
@@ -488,13 +528,18 @@ html {
 }
 
 /* Attributes */
+/* Flex (não grid) para centralizar a última fileira parcial: com 4 itens a
+   linha enche e fica igual a um grid; com 3 (última fileira) o justify-content
+   center centraliza só as sobras, sem mexer na 1ª linha. */
 .attr-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 16px;
 }
 
 .attr-card {
+  flex: 0 0 calc(25% - 12px);
   padding: 20px;
   border-radius: 18px;
   background: rgba(255,255,255,0.03);
@@ -545,6 +590,17 @@ html {
 .mini-card p {
   color: var(--muted);
   font-size: 0.94rem;
+}
+
+/* Atributo de destaque da carta na prévia (label + valor). */
+.mini-destaque {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.mini-destaque strong {
+  color: var(--primary-2);
 }
 
 .mini-card .ghost-stats {
@@ -659,9 +715,12 @@ html {
     height: 460px;
   }
 
-  .grid-4,
-  .attr-grid {
+  .grid-4 {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .attr-card {
+    flex-basis: calc(50% - 8px);
   }
 }
 
@@ -751,9 +810,12 @@ html {
     width: 100%;
   }
 
-  .grid-4,
-  .attr-grid {
+  .grid-4 {
     grid-template-columns: 1fr;
+  }
+
+  .attr-card {
+    flex-basis: 100%;
   }
 
   .hero-stage {
@@ -762,16 +824,32 @@ html {
   }
 
   .card-preview {
-    width: 145px;
-    padding: 14px;
+    padding: 12px;
   }
 
-  .card-name {
-    font-size: 1.15rem;
+  .card-preview.main {
+    width: 158px;
+    height: 320px;
+  }
+
+  .card-preview.left,
+  .card-preview.right {
+    width: 128px;
+    height: 232px;
+  }
+
+  .card-photo {
+    height: 110px;
+  }
+
+  .card-preview.left .card-photo,
+  .card-preview.right .card-photo {
+    height: 78px;
   }
 
   .stat {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
+    padding: 6px 8px;
   }
 
   .footer-inner {
