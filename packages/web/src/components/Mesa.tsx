@@ -4,6 +4,7 @@ import { useIA } from '../hooks/useIA'
 import { useJogoStore } from '../store/jogoStore'
 import { CartaVisual } from './Carta'
 import { Home } from './Home'
+import { MesaMobile } from './MesaMobile'
 import { icones, nomes, coresAtributo } from '../utils/atributos'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -91,7 +92,9 @@ export function Mesa() {
   const pctOponente = total ? (cartasOponente / total) * 100 : 0
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-hemp-dark to-black p-4 md:p-8">
+    <>
+    {/* DESKTOP (≥ lg): layout original, intocado — só escondido no mobile. */}
+    <div className="hidden lg:block min-h-screen bg-gradient-to-b from-hemp-dark to-black p-4 md:p-8">
       {/* EFEITOS DE CLÍMAX (carta especial) */}
       {especialRevelada === 'vantagem' && <Confetti />}
       {especialRevelada === 'reves' && (
@@ -304,6 +307,12 @@ export function Mesa() {
         </div>
       </div>
     </div>
+
+    {/* MOBILE (< lg): mesa dedicada, mesma lógica via hooks. */}
+    <div className="lg:hidden">
+      <MesaMobile />
+    </div>
+    </>
   )
 }
 
