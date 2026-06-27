@@ -74,97 +74,97 @@ export const baralhoCompleto: Carta[] = [
     tipo: 'genetica'
   },
   {
-    id: 'B1', nome: "Mokum's Tulip", banco: "Crazy Seeds",
+    id: 'B1', nome: "Mokum's Tulip", banco: "Dutch Passion",
     descricao: "Buds densos, perfume de caramelo e cores que vão do roxo ao azulado. Essa planta é uma verdadeira maravilha da natureza.",
     thc: 19, cbd: 0.01, relaxamento: 75, foco: 80, felicidade: 90, fome: 75, sono: 68,
     tipo: 'genetica'
   },
   {
-    id: 'B2', nome: "Auto Lemon Kix", banco: "Crazy Seeds",
+    id: 'B2', nome: "Auto Lemon Kix", banco: "Dutch Passion",
     descricao: "Com flores que facilmente atingem o tamanho de bolas de tênis, essa genética carrega a herança de uma Las Vegas Lemon Skunk.",
     thc: 23, cbd: 0.05, relaxamento: 60, foco: 80, felicidade: 100, fome: 60, sono: 55,
     tipo: 'genetica'
   },
   {
-    id: 'B3', nome: "Kerosene Krash", banco: "Crazy Seeds",
+    id: 'B3', nome: "Kerosene Krash", banco: "Dutch Passion",
     descricao: "Considerada uma queridinha das extrações pela alta quantidade de resina, essa planta tem um cheiro tão forte que parece querosene (uma delícia).",
     thc: 19, cbd: 0.01, relaxamento: 75, foco: 80, felicidade: 90, fome: 75, sono: 68,
     tipo: 'genetica'
   },
   {
-    id: 'C1', nome: "Carolina Dream", banco: "Crazy Seeds",
+    id: 'C1', nome: "Carolina Dream", banco: "Redwood",
     descricao: "Genética forte no CBD. Produz bastante extrato para fabricação de óleo e a magia dos terpenos pode garantir o cheiro de chocolate, pinho ou óleo diesel.",
     thc: 0.3, cbd: 18, relaxamento: 90, foco: 89, felicidade: 84, fome: 86, sono: 60,
     tipo: 'genetica'
   },
   {
-    id: 'C2', nome: "Golden Redwood", banco: "Crazy Seeds",
+    id: 'C2', nome: "Golden Redwood", banco: "Redwood",
     descricao: "Predominantemente Sativa e com sabor de tangerina, é conhecida por proporcionar uma sensação geral de bem estar, deixando no ar uma fome controlada.",
     thc: 0.3, cbd: 21, relaxamento: 92, foco: 92, felicidade: 83, fome: 73, sono: 50,
     tipo: 'genetica'
   },
   {
-    id: 'C3', nome: "Wild Bourbon", banco: "Crazy Seeds",
+    id: 'C3', nome: "Wild Bourbon", banco: "Redwood",
     descricao: "Daquelas genéticas que ficam roxas com a chegada do inverno. A combinação de terpenos deixa um cheiro amadeirado, com toques de ameixa, maçã e carvalho.",
     thc: 0.3, cbd: 18, relaxamento: 87, foco: 100, felicidade: 96, fome: 64, sono: 30,
     tipo: 'genetica'
   },
   {
-    id: 'D1', nome: "Jack Orange", banco: "Crazy Seeds",
+    id: 'D1', nome: "Jack Orange", banco: "Gea Seeds",
     descricao: "Com seu cheirinho de laranja é ótima para combater a enxaqueca. Genética Híbrida, nascida de uma cruza entre Black Kush 98 com a famosa Jack Herer.",
     thc: 23, cbd: 1, relaxamento: 52, foco: 92, felicidade: 100, fome: 85, sono: 53,
     tipo: 'genetica'
   },
   {
-    id: 'E1', nome: "AK-47", banco: "Crazy Seeds",
+    id: 'E1', nome: "AK-47", banco: "Clássicas",
     descricao: "Uma das genéticas mais populares da história e não é à toa. Tem esse nome pois segundo as lendas 'faz a cabeça com um hit só'.",
     thc: 20, cbd: 2, relaxamento: 95, foco: 52, felicidade: 82, fome: 80, sono: 40,
     tipo: 'genetica'
   },
   {
-    id: 'E2', nome: "Skunk #1", banco: "Crazy Seeds",
+    id: 'E2', nome: "Skunk #1", banco: "Clássicas",
     descricao: "A lendária Skunk #1 é usada até hoje para dar origem a outras genéticas. Graças a essa planta que o nome 'skunk' sempre é relacionado a qualquer ganja potente.",
     thc: 20, cbd: 2, relaxamento: 95, foco: 52, felicidade: 82, fome: 80, sono: 40,
     tipo: 'genetica'
   },
   {
-    id: 'E3', nome: "Pineapple Express", banco: "Crazy Seeds",
+    id: 'E3', nome: "Pineapple Express", banco: "Clássicas",
     descricao: "Planta híbrida que pode ser cultivada dentro e fora de casa. O efeito intenso da Pineapple Express fez tanto sucesso que já foi até tema de filme.",
     thc: 17, cbd: 0.6, relaxamento: 90, foco: 55, felicidade: 90, fome: 74, sono: 45,
     tipo: 'genetica'
   },
   {
-    id: 'E4', nome: "Buddah Cheese", banco: "Crazy Seeds",
+    id: 'E4', nome: "Buddah Cheese", banco: "Clássicas",
     descricao: "Predominante Indica, com flores gordas e terpenos intensos que fazem lembrar queijo, tanto no cheiro quanto no sabor. Seu efeito faz o usuário meditar.",
     thc: 16, cbd: 0.2, relaxamento: 98, foco: 91, felicidade: 60, fome: 87, sono: 77,
     tipo: 'genetica'
   },
   {
-    id: 'E5', nome: "White Widow", banco: "Crazy Seeds",
+    id: 'E5', nome: "White Widow", banco: "Clássicas",
     descricao: "Originada de uma mistura entre a brasileira Manga Rosa e uma genética do sul da Índia, a White Widow é, há mais de vinte anos, uma das favoritas dos jardineiros.",
     thc: 18, cbd: 1, relaxamento: 86, foco: 83, felicidade: 88, fome: 90, sono: 48,
     tipo: 'genetica'
   },
   {
-    id: 'E6', nome: "Sour Diesel", banco: "Crazy Seeds",
+    id: 'E6', nome: "Sour Diesel", banco: "Clássicas",
     descricao: "Também conhecida como 'Sour D', é uma genética Sativa originária da cruza entre a Chemdawg e a Super Skunk. O efeito é rápido e sim, o cheiro é de óleo diesel.",
     thc: 25, cbd: 0.3, relaxamento: 93, foco: 89, felicidade: 95, fome: 80, sono: 57,
     tipo: 'genetica'
   },
   {
-    id: 'E7', nome: "Blue Dream", banco: "Crazy Seeds",
+    id: 'E7', nome: "Blue Dream", banco: "Clássicas",
     descricao: "Uma genética Híbrida com predominância Sativa. Essa planta produz um efeito balanceado que estimula o cérebro e o completo relaxamento do corpo.",
     thc: 20, cbd: 0.2, relaxamento: 99, foco: 70, felicidade: 92, fome: 40, sono: 66,
     tipo: 'genetica'
   },
   {
-    id: 'F1', nome: "Manga Rosa", banco: "Crazy Seeds",
+    id: 'F1', nome: "Manga Rosa", banco: "Brasileiras",
     descricao: "A genética mais famosa do Brasil é conhecida por seu aroma adocicado e sabor frutado. Ótimos efeitos sedativos para o uso noturno e momentos de descanso.",
     thc: 16, cbd: 0.01, relaxamento: 85, foco: 70, felicidade: 99, fome: 87, sono: 90,
     tipo: 'genetica'
   },
   {
-    id: 'F2', nome: "Cabrobó", banco: "Crazy Seeds",
+    id: 'F2', nome: "Cabrobó", banco: "Brasileiras",
     descricao: "A Cabrobó é uma planta que cresce rápido. Cultivada ao ar livre devido à boa adaptação ao clima da região do 'Polígono da Maconha', no Nordeste brasileiro.",
     thc: 14, cbd: 0.02, relaxamento: 83, foco: 68, felicidade: 86, fome: 99, sono: 70,
     tipo: 'genetica'
