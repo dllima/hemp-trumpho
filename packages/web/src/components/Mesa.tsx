@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { usePartida } from '../hooks/usePartida'
 import { useIA } from '../hooks/useIA'
 import { useJogoStore } from '../store/jogoStore'
 import { CartaVisual } from './Carta'
 import { Home } from './Home'
 import { MesaMobile } from './MesaMobile'
+import { Confetti } from './Confetti'
+import { TelaFim } from './TelaFim'
 import { icones, nomes, coresAtributo } from '../utils/atributos'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -38,25 +40,15 @@ export function Mesa() {
 
   if (partida.finalizada) {
     const v = partida.jogadores.find((j: { id: string }) => j.id === partida.vencedor)
+    const venceu = partida.vencedor === jogadorHumano?.id
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-hemp-dark to-black relative overflow-hidden">
-        <Confetti />
-        <div className="text-center z-10 px-4">
-          <motion.h1 className="text-6xl md:text-7xl font-bold text-hemp-gold mb-4" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }}>
-            🏆 Fim de Jogo!
-          </motion.h1>
-          <p className="text-3xl md:text-4xl mb-2">{v?.nome} venceu!</p>
-          <p className="text-gray-400 mb-8">Rodadas: {partida.rodada - 1}</p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button onClick={() => iniciarPartida(['Você', 'Oponente'], modo)} className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold text-white transition-all hover:scale-105">
-              🔄 Jogar de novo
-            </button>
-            <button onClick={() => voltarInicio()} className="px-8 py-4 bg-hemp-green hover:bg-hemp-light rounded-xl text-xl font-bold text-white transition-all hover:scale-105">
-              🎮 Escolher modo
-            </button>
-          </div>
-        </div>
-      </div>
+      <TelaFim
+        venceu={venceu}
+        nomeVencedor={v?.nome ?? ''}
+        rodadas={partida.rodada - 1}
+        onJogarDeNovo={() => iniciarPartida(['Você', 'Oponente'], modo)}
+        onEscolherModo={() => voltarInicio()}
+      />
     )
   }
 
@@ -316,33 +308,3 @@ export function Mesa() {
   )
 }
 
-function Confetti() {
-  const [pieces, setPieces] = useState<number[]>([])
-
-  useEffect(() => {
-    const p = Array.from({ length: 50 }, (_, i) => i)
-    setPieces(p)
-  }, [])
-
-  const colors = ['#c9a227', '#22c55e', '#ef4444', '#3b82f6', '#f59e0b', '#8b5cf6']
-
-  return (
-    <div className="fixed inset-0 pointer-events-none z-0">
-      {pieces.map((i) => (
-        <div
-          key={i}
-          className="confetti"
-          style={{
-            left: `${Math.random() * 100}%`,
-            backgroundColor: colors[i % colors.length],
-            animationDelay: `${Math.random() * 2}s`,
-            animationDuration: `${2 + Math.random() * 2}s`,
-            width: `${5 + Math.random() * 10}px`,
-            height: `${5 + Math.random() * 10}px`,
-            borderRadius: Math.random() > 0.5 ? '50%' : '0',
-          }}
-        />
-      ))}
-    </div>
-  )
-}
