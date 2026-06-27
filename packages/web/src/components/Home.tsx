@@ -1,11 +1,73 @@
 import './Home.css'
+import { useState } from 'react'
+import { baralhoCompleto, embaralhar, type Atributo, type CartaGenetica } from '@hemp-trumpho/engine'
+import { nomes, icones } from '../utils/atributos'
 
 type Modo = 'rapido' | 'medio' | 'completo'
+
+// Os 7 atributos reais do jogo (par THC/CBD primeiro, como no jogo).
+const ATRIBUTOS: Atributo[] = ['thc', 'cbd', 'relaxamento', 'foco', 'felicidade', 'fome', 'sono']
+
+// Só as cartas genéticas do baralho real (descarta VANTAGEM/REVÉS).
+const GENETICAS = baralhoCompleto.filter((c): c is CartaGenetica => c.tipo === 'genetica')
+
+// Atributos de escala 0-100 (exclui thc/cbd, que são %) — base do "destaque".
+const ESCALA: Atributo[] = ['relaxamento', 'foco', 'felicidade', 'fome', 'sono']
+
+// Atributo de MAIOR valor entre os de escala 0-100. Empate fica com o primeiro
+// na ordem de ESCALA (comparação estrita > preserva o anterior) — determinístico.
+function destaqueDe(c: CartaGenetica): Atributo {
+  return ESCALA.reduce((melhor, attr) => (c[attr] > c[melhor] ? attr : melhor), ESCALA[0])
+}
+
+// Ícone SVG do atributo (/cartas/icones/<attr>.svg), com fallback no emoji se o
+// arquivo faltar — mesmo padrão do componente Carta. Invertido para branco para
+// contrastar no fundo escuro da Home.
+function IconeAtributo({ attr }: { attr: Atributo }) {
+  const [semSvg, setSemSvg] = useState(false)
+  if (semSvg) return <span style={{ fontSize: '1.4rem' }}>{icones[attr]}</span>
+  return (
+    <img
+      src={`/cartas/icones/${attr}.svg`}
+      alt=""
+      aria-hidden
+      style={{ width: 28, height: 28, filter: 'brightness(0) invert(1)' }}
+      onError={() => setSemSvg(true)}
+    />
+  )
+}
+
+// Foto da strain com fallback webp → jpg → placeholder. Cada onError só AVANÇA
+// a fase, nunca reaponta para um src que já falhou (evita loop) — mesmo padrão
+// do componente Carta. As cartas do hero são fixas na visita, então não há
+// necessidade de reset entre rodadas.
+function FotoStrain({ id, nome }: { id: string; nome: string }) {
+  const [fase, setFase] = useState<'webp' | 'jpg' | 'erro'>('webp')
+  if (fase === 'erro') {
+    return <div className="card-photo-fallback">🌿</div>
+  }
+  const base = `/cartas/fotos/${id.toLowerCase()}`
+  return (
+    <img
+      src={fase === 'webp' ? `${base}.webp` : `${base}.jpg`}
+      alt={nome}
+      onError={() => setFase(f => (f === 'webp' ? 'jpg' : 'erro'))}
+    />
+  )
+}
 
 // Landing/home do jogo. Os botões de AÇÃO (iniciar partida) chamam onIniciar;
 // os links de NAVEGAÇÃO interna (#modos, #como-funciona, #atributos) continuam
 // como <a href> para o scroll suave da própria página.
 export function Home({ onIniciar }: { onIniciar: (modo: Modo) => void }) {
+  // Cartas em destaque sorteadas UMA vez por visita (lazy useState não
+  // re-sorteia em re-render). 7 distintas: 3 para o hero, 4 para a prévia.
+  const [destaques] = useState<CartaGenetica[]>(
+    () => embaralhar(GENETICAS).slice(0, 7) as CartaGenetica[]
+  )
+  const cartasHero = destaques.slice(0, 3)
+  const cartasPrevia = destaques.slice(3, 7)
+
   return (
     <div className="home-root">
       <header className="site-header">
@@ -62,42 +124,30 @@ export function Home({ onIniciar }: { onIniciar: (modo: Modo) => void }) {
                 <div className="floating-badge badge-2">🌿 28 genéticas no baralho</div>
                 <div className="floating-badge badge-3">⚡ Partidas rápidas</div>
 
-                <div className="card-preview left">
-                  <div className="card-tag">Carta rival</div>
-                  <div className="card-name">Purple Haze</div>
-                  <div className="card-type">Sativa clássica</div>
+                {(['left', 'main', 'right'] as const).map((pos, i) => {
+                  const c = cartasHero[i]
+                  // Central mostra 4 stats; laterais (menores) só 2. A seção
+                  // "Atributos" abaixo lista os 7 reais; aqui é só amostra.
+                  const qtdStats = pos === 'main' ? 4 : 2
+                  return (
+                    <div className={`card-preview ${pos}`} key={pos}>
+                      <div className="card-photo">
+                        {pos === 'main' && <span className="card-badge">{c.id}</span>}
+                        <FotoStrain id={c.id} nome={c.nome} />
+                      </div>
 
-                  <div className="stats">
-                    <div className="stat"><span>THC</span><strong>22</strong></div>
-                    <div className="stat"><span>Aroma</span><strong>18</strong></div>
-                    <div className="stat"><span>Potência</span><strong>20</strong></div>
-                  </div>
-                </div>
-
-                <div className="card-preview main">
-                  <div className="card-tag">Carta em destaque</div>
-                  <div className="card-name">Lemon Kush</div>
-                  <div className="card-type">Híbrida cítrica</div>
-
-                  <div className="stats">
-                    <div className="stat"><span>THC</span><strong>25</strong></div>
-                    <div className="stat"><span>CBD</span><strong>9</strong></div>
-                    <div className="stat"><span>Sabor</span><strong>21</strong></div>
-                    <div className="stat"><span>Potência</span><strong>24</strong></div>
-                  </div>
-                </div>
-
-                <div className="card-preview right">
-                  <div className="card-tag">Carta rival</div>
-                  <div className="card-name">OG Gold</div>
-                  <div className="card-type">Índica potente</div>
-
-                  <div className="stats">
-                    <div className="stat"><span>CBD</span><strong>11</strong></div>
-                    <div className="stat"><span>Produção</span><strong>19</strong></div>
-                    <div className="stat"><span>Potência</span><strong>23</strong></div>
-                  </div>
-                </div>
+                      <div className="stats">
+                        {ATRIBUTOS.slice(0, qtdStats).map(attr => (
+                          <div className="stat" key={attr}>
+                            <span>{nomes[attr]}</span>
+                            <strong>{attr === 'thc' || attr === 'cbd' ? `${c[attr]}%` : c[attr]}</strong>
+                          </div>
+                        ))}
+                        <div className="stat-total">7 atributos no total</div>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </div>
@@ -223,38 +273,12 @@ export function Home({ onIniciar }: { onIniciar: (modo: Modo) => void }) {
             </p>
 
             <div className="attr-grid">
-              <div className="attr-card">
-                <span>Atributo</span>
-                <strong>THC</strong>
-              </div>
-              <div className="attr-card">
-                <span>Atributo</span>
-                <strong>CBD</strong>
-              </div>
-              <div className="attr-card">
-                <span>Atributo</span>
-                <strong>Sativa</strong>
-              </div>
-              <div className="attr-card">
-                <span>Atributo</span>
-                <strong>Índica</strong>
-              </div>
-              <div className="attr-card">
-                <span>Atributo</span>
-                <strong>Sabor</strong>
-              </div>
-              <div className="attr-card">
-                <span>Atributo</span>
-                <strong>Potência</strong>
-              </div>
-              <div className="attr-card">
-                <span>Atributo</span>
-                <strong>Produção</strong>
-              </div>
-              <div className="attr-card">
-                <span>Atributo extra</span>
-                <strong>Especial</strong>
-              </div>
+              {ATRIBUTOS.map(attr => (
+                <div className="attr-card" key={attr}>
+                  <span><IconeAtributo attr={attr} /></span>
+                  <strong>{nomes[attr]}</strong>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -270,41 +294,21 @@ export function Home({ onIniciar }: { onIniciar: (modo: Modo) => void }) {
             </p>
 
             <div className="grid-4">
-              <article className="mini-card">
-                <span className="topline">Carta rara</span>
-                <h4>Blue Dream</h4>
-                <p>Equilíbrio entre potência, aroma e jogabilidade.</p>
-                <div className="ghost-stats">
-                  <div></div><div></div><div></div>
-                </div>
-              </article>
-
-              <article className="mini-card">
-                <span className="topline">Carta híbrida</span>
-                <h4>Amnesia Gold</h4>
-                <p>Boa escolha para quem gosta de viradas estratégicas.</p>
-                <div className="ghost-stats">
-                  <div></div><div></div><div></div>
-                </div>
-              </article>
-
-              <article className="mini-card">
-                <span className="topline">Carta clássica</span>
-                <h4>Skunk Fire</h4>
-                <p>Perfil agressivo e valores fortes em confronto direto.</p>
-                <div className="ghost-stats">
-                  <div></div><div></div><div></div>
-                </div>
-              </article>
-
-              <article className="mini-card">
-                <span className="topline">Carta especial</span>
-                <h4>Critical Haze</h4>
-                <p>Uma carta versátil para diferentes estilos de partida.</p>
-                <div className="ghost-stats">
-                  <div></div><div></div><div></div>
-                </div>
-              </article>
+              {cartasPrevia.map(c => {
+                const dest = destaqueDe(c)
+                return (
+                  <article className="mini-card" key={c.id}>
+                    <span className="topline">{c.banco}</span>
+                    <img
+                      src={`/cartas/fotos/${c.id.toLowerCase()}.webp`}
+                      alt={c.nome}
+                      style={{ width: '100%', height: 150, objectFit: 'cover', borderRadius: 12, marginBottom: 12 }}
+                    />
+                    <h4>{c.nome}</h4>
+                    <div className="mini-destaque">{nomes[dest]} <strong>{c[dest]}</strong></div>
+                  </article>
+                )
+              })}
             </div>
           </div>
         </section>
