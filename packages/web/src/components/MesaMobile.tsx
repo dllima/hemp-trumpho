@@ -32,6 +32,26 @@ function FotoMini({ id, nome }: { id: string; nome: string }) {
   )
 }
 
+// Arte compacta da carta especial (vantagem/reves) com fallback webp → jpg →
+// emoji (mesmo padrão de fase do FotoMini).
+function FotoEspecialMini({ tipo }: { tipo: 'vantagem' | 'reves' }) {
+  const [fase, setFase] = useState<'webp' | 'jpg' | 'fallback'>('webp')
+  if (fase === 'fallback') {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-yellow-500 to-red-700">{tipo === 'vantagem' ? '⭐' : '💀'}</div>
+    )
+  }
+  const base = `/cartas/especiais/${tipo}`
+  return (
+    <img
+      src={fase === 'webp' ? `${base}.webp` : `${base}.jpg`}
+      alt={tipo}
+      className="w-full h-full object-cover"
+      onError={() => setFase(f => (f === 'webp' ? 'jpg' : 'fallback'))}
+    />
+  )
+}
+
 // Ícone do atributo (SVG /cartas/icones/<attr>.svg) com fallback no emoji.
 function IconeAttr({ attr }: { attr: Atributo }) {
   const [semSvg, setSemSvg] = useState(false)
@@ -80,6 +100,9 @@ export function MesaMobile() {
 
   const humanoGen = cartaHumano?.tipo === 'genetica' ? (cartaHumano as CartaGenetica) : null
   const iaGen = cartaIA?.tipo === 'genetica' ? (cartaIA as CartaGenetica) : null
+  // Tipo especial (vantagem/reves) para mostrar a arte; null caso contrário.
+  const humanoEsp = cartaHumano?.tipo === 'vantagem' || cartaHumano?.tipo === 'reves' ? cartaHumano.tipo : null
+  const iaEsp = cartaIA?.tipo === 'vantagem' || cartaIA?.tipo === 'reves' ? cartaIA.tipo : null
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-hemp-dark to-black p-3 text-white">
@@ -107,7 +130,7 @@ export function MesaMobile() {
             <div className="relative h-32">
               {humanoGen
                 ? <FotoMini id={humanoGen.id} nome={humanoGen.nome} />
-                : <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-yellow-500 to-red-700">{cartaHumano?.tipo === 'vantagem' ? '⭐' : '💀'}</div>}
+                : humanoEsp ? <FotoEspecialMini tipo={humanoEsp} /> : null}
               {humanoGen && (
                 <span className="absolute top-1 left-1 bg-[#4ade80] text-[#0a4d3c] font-extrabold text-[10px] px-1.5 py-0.5 rounded">{humanoGen.id}</span>
               )}
@@ -144,7 +167,7 @@ export function MesaMobile() {
               <div className="relative h-32">
                 {iaGen
                   ? <FotoMini id={iaGen.id} nome={iaGen.nome} />
-                  : <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-yellow-500 to-red-700">{cartaIA?.tipo === 'vantagem' ? '⭐' : '💀'}</div>}
+                  : iaEsp ? <FotoEspecialMini tipo={iaEsp} /> : null}
                 {iaGen && (
                   <span className="absolute top-1 left-1 bg-[#4ade80] text-[#0a4d3c] font-extrabold text-[10px] px-1.5 py-0.5 rounded">{iaGen.id}</span>
                 )}
