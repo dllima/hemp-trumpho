@@ -36,6 +36,78 @@ function IconeAtributo({ attr }: { attr: Atributo }) {
   )
 }
 
+// Carta especial (VANTAGEM/REVÉS) com a ARTE real ocupando a carta, mantendo
+// a animação de entrada (glow dourado na VANTAGEM, tremor/flash na REVÉS).
+// Fallback via máquina de fase webp → jpg → 'fallback' (visual antigo: emoji +
+// título + subtítulo). Cada onError só AVANÇA a fase (sem loop).
+function CartaEspecial({ tipo }: { tipo: 'vantagem' | 'reves' }) {
+  const [fase, setFase] = useState<'webp' | 'jpg' | 'fallback'>('webp')
+  const ehVantagem = tipo === 'vantagem'
+  const base = `/cartas/especiais/${tipo.toLowerCase()}`
+  const dim = 'relative overflow-hidden w-[240px] h-[400px] sm:w-[320px] sm:h-[540px] rounded-2xl shadow-2xl border-2'
+
+  // Arte (webp/jpg) preenchendo a carta, ou o visual antigo no fallback.
+  const conteudo = fase !== 'fallback' ? (
+    <img
+      src={fase === 'webp' ? `${base}.webp` : `${base}.jpg`}
+      alt={ehVantagem ? 'VANTAGEM' : 'REVÉS'}
+      className="absolute inset-0 w-full h-full object-cover"
+      onError={() => setFase(f => (f === 'webp' ? 'jpg' : 'fallback'))}
+    />
+  ) : (
+    <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+      <motion.div
+        className="text-6xl mb-4"
+        animate={ehVantagem ? { scale: [1, 1.3, 1], rotate: [0, 12, -12, 0] } : { scale: [1, 1.2, 0.95, 1], rotate: [0, -10, 10, 0] }}
+        transition={ehVantagem ? { duration: 1.2, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.6, ease: 'easeInOut' }}
+      >
+        {ehVantagem ? '⭐' : '💀'}
+      </motion.div>
+      <h2 className="text-3xl font-bold text-white">{ehVantagem ? 'VANTAGEM' : 'REVÉS'}</h2>
+      <p className={`mt-2 ${ehVantagem ? 'text-yellow-100' : 'text-red-100'}`}>{ehVantagem ? 'Vence a rodada!' : 'Perde a rodada!'}</p>
+    </div>
+  )
+
+  if (ehVantagem) {
+    return (
+      <motion.div
+        className={`${dim} border-yellow-300 ${fase === 'fallback' ? 'bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-700' : ''}`}
+        initial={{ scale: 0.6 }}
+        animate={{
+          scale: [0.6, 1.15, 1],
+          boxShadow: [
+            '0 0 0px rgba(234,179,8,0)',
+            '0 0 40px rgba(234,179,8,0.85)',
+            '0 0 24px rgba(234,179,8,0.6)',
+          ],
+        }}
+        transition={{ duration: 0.7, times: [0, 0.6, 1], ease: 'easeOut' }}
+      >
+        {conteudo}
+      </motion.div>
+    )
+  }
+
+  return (
+    <motion.div
+      className={`${dim} border-red-500 ${fase === 'fallback' ? 'bg-gradient-to-br from-red-700 to-red-900' : ''}`}
+      initial={{ x: 0 }}
+      animate={{
+        x: [0, -8, 8, -6, 6, -4, 4, 0],
+        opacity: [1, 0.7, 1],
+        boxShadow: [
+          '0 0 0px rgba(0,0,0,0)',
+          '0 0 40px rgba(139,26,26,0.9)',
+          '0 0 18px rgba(0,0,0,0.5)',
+        ],
+      }}
+      transition={{ duration: 0.6, ease: 'easeInOut' }}
+    >
+      {conteudo}
+    </motion.div>
+  )
+}
+
 export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVez, atributoSelecionado, foto }: Props) {
 
   // Fallback da foto da strain: webp → jpg → placeholder. Cada onError só
@@ -52,59 +124,7 @@ export function CartaVisual({ carta, virada, onEscolher, podeEscolher, ehMinhaVe
     if (!virada) {
       return <CartaVerso tamanho="normal" />
     }
-    if (carta.tipo === 'vantagem') {
-      return (
-        <motion.div
-          className="w-[240px] h-[400px] sm:w-[320px] sm:h-[540px] bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-700 rounded-2xl p-6 shadow-2xl border-2 border-yellow-300 flex flex-col items-center justify-center text-center"
-          initial={{ scale: 0.6 }}
-          animate={{
-            scale: [0.6, 1.15, 1],
-            boxShadow: [
-              '0 0 0px rgba(234,179,8,0)',
-              '0 0 40px rgba(234,179,8,0.85)',
-              '0 0 24px rgba(234,179,8,0.6)',
-            ],
-          }}
-          transition={{ duration: 0.7, times: [0, 0.6, 1], ease: 'easeOut' }}
-        >
-          <motion.div
-            className="text-6xl mb-4"
-            animate={{ scale: [1, 1.3, 1], rotate: [0, 12, -12, 0] }}
-            transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            ⭐
-          </motion.div>
-          <h2 className="text-3xl font-bold text-white">VANTAGEM</h2>
-          <p className="text-yellow-100 mt-2">Vence a rodada!</p>
-        </motion.div>
-      )
-    }
-    return (
-      <motion.div
-        className="w-[240px] h-[400px] sm:w-[320px] sm:h-[540px] bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-6 shadow-2xl border-2 border-red-500 flex flex-col items-center justify-center text-center"
-        initial={{ x: 0 }}
-        animate={{
-          x: [0, -8, 8, -6, 6, -4, 4, 0],
-          opacity: [1, 0.7, 1],
-          boxShadow: [
-            '0 0 0px rgba(0,0,0,0)',
-            '0 0 40px rgba(139,26,26,0.9)',
-            '0 0 18px rgba(0,0,0,0.5)',
-          ],
-        }}
-        transition={{ duration: 0.6, ease: 'easeInOut' }}
-      >
-        <motion.div
-          className="text-6xl mb-4"
-          animate={{ scale: [1, 1.2, 0.95, 1], rotate: [0, -10, 10, 0] }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
-        >
-          💀
-        </motion.div>
-        <h2 className="text-3xl font-bold text-white">REVÉS</h2>
-        <p className="text-red-100 mt-2">Perde a rodada!</p>
-      </motion.div>
-    )
+    return <CartaEspecial tipo={carta.tipo} />
   }
 
   const g = carta as CartaGenetica
