@@ -1,6 +1,6 @@
 import './Home.css'
 import { useState } from 'react'
-import { baralhoCompleto, embaralhar, type Atributo, type CartaGenetica } from '@hemp-trumpho/engine'
+import { baralhoOriginal, embaralhar, type Atributo, type CartaGenetica } from '@hemp-trumpho/engine'
 import { nomes, icones } from '../utils/atributos'
 
 type Modo = 'rapido' | 'medio' | 'completo'
@@ -8,8 +8,9 @@ type Modo = 'rapido' | 'medio' | 'completo'
 // Os 7 atributos reais do jogo (par THC/CBD primeiro, como no jogo).
 const ATRIBUTOS: Atributo[] = ['thc', 'cbd', 'relaxamento', 'foco', 'felicidade', 'fome', 'sono']
 
-// Só as cartas genéticas do baralho real (descarta VANTAGEM/REVÉS).
-const GENETICAS = baralhoCompleto.filter((c): c is CartaGenetica => c.tipo === 'genetica')
+// Genéticas do baralho original (entidade). O filtro narra o tipo: Baralho.cartas
+// é Carta[], então estreitamos para CartaGenetica (e ignora não-genéticas futuras).
+const GENETICAS = baralhoOriginal.cartas.filter((c): c is CartaGenetica => c.tipo === 'genetica')
 
 // Atributos de escala 0-100 (exclui thc/cbd, que são %) — base do "destaque".
 const ESCALA: Atributo[] = ['relaxamento', 'foco', 'felicidade', 'fome', 'sono']
@@ -103,7 +104,7 @@ export function Home({ onIniciar }: { onIniciar: (modo: Modo) => void }) {
               </p>
 
               <div className="chip-list">
-                <div className="chip">28 genéticas</div>
+                <div className="chip">{GENETICAS.length} genéticas</div>
                 <div className="chip">7 atributos</div>
                 <div className="chip">partidas rápidas</div>
                 <div className="chip">jogue em qualquer lugar</div>
@@ -121,7 +122,7 @@ export function Home({ onIniciar }: { onIniciar: (modo: Modo) => void }) {
 
               <div className="hero-stage">
                 <div className="floating-badge badge-1">🏆 Melhor atributo vence</div>
-                <div className="floating-badge badge-2">🌿 28 genéticas no baralho</div>
+                <div className="floating-badge badge-2">🌿 {GENETICAS.length} genéticas no baralho</div>
                 <div className="floating-badge badge-3">⚡ Partidas rápidas</div>
 
                 {(['left', 'main', 'right'] as const).map((pos, i) => {
