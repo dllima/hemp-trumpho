@@ -1,6 +1,7 @@
-import type { Carta } from '../types.js';
+import type { Carta, CartaGenetica, Baralho } from '../types.js';
 
-export const baralhoCompleto: Carta[] = [
+// As 28 genéticas do baralho original (sem as especiais, que são globais).
+export const geneticasOriginal: CartaGenetica[] = [
   {
     id: 'A1', nome: "Clockwork Orange", banco: "Crazy Seeds",
     descricao: "Seu nome é em homenagem ao clássico time da seleção holandesa de 1972. Terpenos cítricos, cheiro forte de laranja e com produção elevada de resina.",
@@ -169,6 +170,11 @@ export const baralhoCompleto: Carta[] = [
     thc: 14, cbd: 0.02, relaxamento: 83, foco: 68, felicidade: 86, fome: 99, sono: 70,
     tipo: 'genetica'
   },
+];
+
+// Cartas especiais GLOBAIS — injetadas em TODA partida, não pertencem a um
+// baralho específico. Saíram do array do baralho nesta fatia.
+export const especiaisGlobais: Carta[] = [
   {
     id: 'VANTAGEM', nome: "VANTAGEM", tipo: 'vantagem',
     efeito: "Sorte! Você venceu essa rodada."
@@ -178,6 +184,22 @@ export const baralhoCompleto: Carta[] = [
     efeito: "Ih! Ferrou! Essa plantinha mofou. Você perdeu essa rodada."
   }
 ];
+
+// O baralho original como entidade. id/nome PROVISÓRIOS (confirmar no smoke).
+export const baralhoOriginal: Baralho = {
+  id: 'original',
+  nome: 'Baralho Original',
+  cartas: geneticasOriginal,
+};
+
+// Registry de baralhos disponíveis (por ora só o original).
+export const baralhos: Record<string, Baralho> = {
+  original: baralhoOriginal,
+};
+
+// COMPAT: baralhoCompleto = genéticas + especiais (idêntico ao de antes), para
+// não quebrar consumidores existentes (Home, teste) nesta fatia.
+export const baralhoCompleto: Carta[] = [...geneticasOriginal, ...especiaisGlobais];
 
 export function embaralhar(cartas: Carta[]): Carta[] {
   const copia = [...cartas];

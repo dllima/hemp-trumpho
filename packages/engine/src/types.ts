@@ -40,6 +40,14 @@ export interface CartaInformativa {
 
 export type Carta = CartaGenetica | CartaEspecial | CartaInformativa;
 
+// Um baralho como entidade. `cartas` contém apenas as genéticas; as cartas
+// especiais (VANTAGEM/REVÉS) são um pool GLOBAL injetado em toda partida.
+export interface Baralho {
+  id: string;
+  nome: string;
+  cartas: Carta[];
+}
+
 export interface Jogador {
   id: string;
   nome: string;
