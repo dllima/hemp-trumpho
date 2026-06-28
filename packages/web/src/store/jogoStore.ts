@@ -3,7 +3,8 @@ import {
   criarPartida,
   escolherAtributo,
   compararRodada,
-  baralhoCompleto,
+  baralhos,
+  especiaisGlobais,
   obterCartaTopo,
   podeEscolherAtributo,
   type EstadoPartida,
@@ -43,6 +44,7 @@ interface JogoState {
   resultadoPendente: ResultadoPendente | null
   historicoRodadas: HistoricoRodada[]
   modo: ModoJogo
+  baralhoId: string
   iniciarPartida: (nomes: string[], modo?: ModoJogo) => void
   jogarAtributo: (atributo: Atributo) => void
   avancarRodada: () => void
@@ -56,11 +58,16 @@ export const useJogoStore = create<JogoState>((set, get) => ({
   resultadoPendente: null,
   historicoRodadas: [],
   modo: 'completo',
+  baralhoId: 'original',
 
   iniciarPartida: (nomes, modo) => {
     const modoEscolhido = modo ?? get().modo
-    const partida = criarPartida(nomes, baralhoCompleto, CARTAS_POR_MODO[modoEscolhido])
-    set({ partida, resultadoPendente: null, historicoRodadas: [], modo: modoEscolhido })
+    // Resolve o baralho do registry (por ora sempre 'original') e injeta as
+    // especiais GLOBAIS em toda partida. A engine (criarPartida) segue agnóstica.
+    const baralho = baralhos[get().baralhoId] ?? baralhos.original
+    const cartas = [...baralho.cartas, ...especiaisGlobais]
+    const partida = criarPartida(nomes, cartas, CARTAS_POR_MODO[modoEscolhido])
+    set({ partida, resultadoPendente: null, historicoRodadas: [], modo: modoEscolhido, baralhoId: baralho.id })
   },
 
   jogarAtributo: (atributo) => {
@@ -126,7 +133,7 @@ export const useJogoStore = create<JogoState>((set, get) => ({
   },
 
   podeJogar: (jogadorId) => {
-    const { partida, resultadoPendente } = get()
+    const { partida, resultadoPendente } = get()       
     if (!partida || resultadoPendente) return false
     return podeEscolherAtributo(partida, jogadorId)
   },
